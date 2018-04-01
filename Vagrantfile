@@ -6,6 +6,7 @@ VAGRANTFILE_API_VERSION = "2"
 $script = <<SCRIPT
 rm -rf /var/www/html
 ln -fs /vagrant/docroot /var/www/html
+chmod 0777 /var/log/nginx
 SCRIPT
 
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
