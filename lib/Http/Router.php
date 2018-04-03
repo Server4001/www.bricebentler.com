@@ -8,8 +8,12 @@
 
 namespace BentlerDesign\Http;
 
+use BentlerDesign\Models\Config;
+use BentlerDesign\Services\Email\SendGrid;
 use BentlerDesign\Services\Logger;
 use Closure;
+use Exception;
+use GuzzleHttp\Client;
 
 class Router
 {
@@ -19,11 +23,11 @@ class Router
     private $logger;
 
     /**
-     * @var array
+     * @var Config
      */
     private $config;
 
-    public function __construct(Logger $logger, array $config)
+    public function __construct(Logger $logger, Config $config)
     {
         $this->logger = $logger;
         $this->config = $config;
@@ -50,23 +54,29 @@ class Router
         ];
     }
 
+    /**
+     * @throws \Exception
+     */
     private function mailRoute()
     {
-        if (!isset($this->config['sendgrid_user'], $this->config['sendgrid_pass']) ||
-            $this->config['sendgrid_user'] === false || $this->config['sendgrid_pass'] === false) {
+        $sendGrid = new SendGrid(new Client(), $this->config, $this->logger);
 
-            $this->logger->log('Unable to send email due to missing credentials.');
+        if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['message']) ||
+            !filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)) {
 
-            return;
+            throw new Exception('Missing or invalid POST param.');
         }
 
-        // TODO : THIS.
+        $name = strip_tags(htmlspecialchars($_POST['name']));
+        $email_address = strip_tags(htmlspecialchars($_POST['email']));
+        $phone = strip_tags(htmlspecialchars($_POST['phone']));
+        $message = strip_tags(htmlspecialchars($_POST['message']));
+
+        $sendGrid->sendEmail($email_address, $name, '', '', "<b>{$message} - {$phone}</b>");
     }
 
     private function defaultRoute()
     {
-        $config = $this->config;
-
         ob_start();
         require(PROJECT_ROOT . '/lib/Views/main.php');
         $output = ob_get_contents();

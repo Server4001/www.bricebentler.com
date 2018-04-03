@@ -7,6 +7,7 @@
  */
 
 use BentlerDesign\Http\Router;
+use BentlerDesign\Models\Config;
 use BentlerDesign\Services\Logger;
 use Dotenv\Dotenv;
 
@@ -25,14 +26,16 @@ require_once PROJECT_ROOT . DIRECTORY_SEPARATOR . 'vendor/autoload.php';
 
 (new Dotenv(PROJECT_ROOT . DIRECTORY_SEPARATOR . 'etc'))->load();
 
-$config = [
-    'google_analytics' => (getenv('USE_GOOGLE_ANALYTICS') === 'true'),
-    'sendgrid_user' => getenv('SENDGRID_USER'),
-    'sendgrid_pass' => getenv('SENDGRID_PASS'),
-    'log_path' => (getenv('LOG_PATH') ?? '/var/log/nginx/www.log'),
-];
+$config = new Config();
 
-$logger = new Logger($config['log_path']);
+try {
+    $logFilePath = $config->get('log_path');
+    $logger = new Logger($logFilePath);
+} catch (Throwable $e) {
+    echo "Missing log file path, or directory not writable.";
+    // TODO : RESPONSE CODE.
+    exit();
+}
 
 try {
     (new Router($logger, $config))->route();
