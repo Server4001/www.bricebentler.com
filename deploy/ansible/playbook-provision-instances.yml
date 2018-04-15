@@ -14,6 +14,7 @@
     - linux_user_nginx
     - php
     - composer
+    - postfix
 
   handlers:
     - include: handlers/handlers.yml

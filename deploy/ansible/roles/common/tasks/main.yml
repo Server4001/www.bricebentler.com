@@ -1,8 +1,8 @@
 ---
 - name: Install common packages in amzn-main repo
   yum:
-    name: "{{ item }}"
     state: present
+    name: "{{ item }}"
   with_items:
     - git
     - tree
@@ -14,8 +14,8 @@
 
 - name: Install common packages in EPEL repo
   yum:
-    name: "{{ item }}"
     state: present
+    name: "{{ item }}"
     enablerepo: epel
   with_items:
     - bash-completion
