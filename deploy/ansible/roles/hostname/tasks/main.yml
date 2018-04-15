@@ -5,4 +5,4 @@
 
 - name: Set the hostname
   hostname:
-    name: "{{ hostname_prefix|replace(' ', '-') }}-{{ ansible_default_ipv4.address|replace('.', '-') }}"
+    name: "{{ hostname_prefix|replace(' ', '-') }}-{{ hostvars[inventory_hostname]['ec2_ip_address']|replace('.', '-') }}"

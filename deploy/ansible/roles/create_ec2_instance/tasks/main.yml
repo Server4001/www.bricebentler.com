@@ -23,11 +23,22 @@
         delete_on_termination: true
   register: create_ec2_instance_output
 
+- name: Allocate a new EIP and attach to the EC2 instance
+  ec2_eip:
+    device_id: "{{ item.id }}"
+  with_items: "{{ create_ec2_instance_output.instances }}"
+  register: create_eip_output
+
+- name: Output the Elastic IPs
+  debug:
+    msg: "Allocated Elastic IP: '{{ item.public_ip }}'"
+  with_items: "{{ create_eip_output.results }}"
+
 - name: Wait for SSH to come up
   wait_for:
     state: started
-    host: "{{ item.public_dns_name }}"
+    host: "{{ item.public_ip }}"
     port: 22
     delay: 60
     timeout: 300
-  with_items: "{{ create_ec2_instance_output.instances }}"
+  with_items: "{{ create_eip_output.results }}"
