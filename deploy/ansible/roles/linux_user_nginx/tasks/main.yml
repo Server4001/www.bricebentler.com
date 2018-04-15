@@ -1,0 +1,18 @@
+---
+- name: 'Create the nginx group'
+  group:
+    state: present
+    name: "{{ nginx_group_name }}"
+    gid: "{{ nginx_group_id }}"
+
+- name: 'Create the nginx user'
+  user:
+    state: present
+    name: "{{ nginx_user_name }}"
+    comment: 'Nginx web server'
+    shell: /sbin/nologin
+    home: "{{ nginx_home }}"
+    createhome: yes
+    generate_ssh_key: no
+    uid: "{{ nginx_user_id }}"
+    group: "{{ nginx_group_name }}"

@@ -11,6 +11,7 @@
     - common
     - hostname
     - linux_user_ec2_user
+    - linux_user_nginx
 
   handlers:
     - include: handlers/handlers.yml
