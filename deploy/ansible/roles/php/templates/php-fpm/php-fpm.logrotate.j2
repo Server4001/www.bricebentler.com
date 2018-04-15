@@ -1,0 +1,11 @@
+# {{ ansible_managed }}
+
+{{ php_fpm_logs_path }}/*log {
+    missingok
+    notifempty
+    sharedscripts
+    delaycompress
+    postrotate
+        /bin/kill -SIGUSR1 `cat {{ php_fpm_daemon_pid_path }} 2>/dev/null` 2>/dev/null || true
+    endscript
+}

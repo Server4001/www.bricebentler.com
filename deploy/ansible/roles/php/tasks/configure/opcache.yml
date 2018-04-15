@@ -1,0 +1,18 @@
+---
+- name: Configure opcache
+  template:
+    src: opcache/10-opcache.ini.j2
+    dest: "{{ php_extension_configs_path }}/10-opcache.ini"
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Reload PHP-FPM
+
+- name: Configure the opcache file blacklist
+  template:
+    src: opcache/opcache-default.blacklist.j2
+    dest: "{{ php_extension_configs_path }}/opcache-default.blacklist"
+    mode: '0644'
+    owner: root
+    group: root
+  notify: Reload PHP-FPM

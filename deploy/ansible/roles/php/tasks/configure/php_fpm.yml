@@ -1,0 +1,46 @@
+---
+- name: Configure global PHP-FPM file
+  template:
+    src: php-fpm/php-fpm.conf.j2
+    dest: "{{ php_fpm_global_config_file }}"
+    mode: 0644
+    owner: root
+    group: root
+  notify: Reload PHP-FPM
+
+- name: Remove PHP-FPM pool configs created by Yum
+  file:
+    state: absent
+    path: "{{ php_fpm_pool_confs_path }}/{{ item }}"
+  with_items:
+    - php-fpm.conf
+    - www.conf
+  notify: Reload PHP-FPM
+
+- name: Create the PHP-FPM related log directories
+  file:
+    state: directory
+    path: "{{ item }}"
+    mode: '0755'
+    owner: "{{ nginx_user_name }}"
+    group: "{{ nginx_group_name }}"
+  with_items:
+    - "{{ php_fpm_logs_path }}"
+    - "{{ application_logs_path }}"
+
+- name: Configure the PHP-FPM pool for bricebentler.com
+  template:
+    src: php-fpm/php-fpm-pool.conf.j2
+    dest: "{{ php_fpm_pool_confs_path }}/{{ item.pool_name }}.conf"
+    mode: 0644
+    owner: root
+    group: root
+  with_items:
+    - {
+      pool_name: 'bricebentler',
+      listen: "{{ php_fpm_bricebentler_socket_file }}",
+      error_log: "{{ php_fpm_bricebentler_error_log }}"
+    }
+  notify:
+    - Reload PHP-FPM
+    - Reload Nginx

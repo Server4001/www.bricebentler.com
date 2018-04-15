@@ -1,0 +1,26 @@
+---
+- name: Install PHP packages
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items: "{{ php_package_names }}"
+
+- include: move_php_fpm_sysvinit_script.yml
+
+- name: Start the PHP-FPM service
+  service:
+    name: php-fpm
+    state: started
+    enabled: true
+
+- name: Update the logrotate config for PHP-FPM
+  template:
+    src: php-fpm/php-fpm.logrotate.j2
+    dest: "/etc/logrotate.d/php-fpm-7.1"
+    mode: 0644
+    owner: root
+    group: root
+
+- include: configure/php.yml
+- include: configure/php_fpm.yml
+- include: configure/opcache.yml

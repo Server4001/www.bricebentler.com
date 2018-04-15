@@ -1,0 +1,37 @@
+---
+
+# Amazon Linux creates 2 PHP-FPM SysVinit scripts. /etc/init.d/php-fpm is a symlink to /etc/init.d/php-fpm-7.1
+# I have always found this annoying when running the service and chkconfig commands, so ensure we only have a single
+# script.
+- name: Check if the PHP-FPM SysVinit symlink exists
+  stat:
+    path: "{{ php_fpm_sysvinit_script }}"
+  register: php_fpm_sysvinit_stat
+
+- block:
+
+  - name: Delete the PHP-FPM SysVinit symlink
+    file:
+      state: absent
+      path: "{{ php_fpm_sysvinit_script }}"
+
+  - name: Copy the PHP-FPM SysVinit script to /etc/init.d/php-fpm
+    copy:
+      src: "{{ php_fpm_sysvinit_stat.stat.lnk_source }}"
+      dest: "{{ php_fpm_sysvinit_script }}"
+      remote_src: True
+
+  - name: Delete the old PHP-FPM SysVinit script
+    file:
+      state: absent
+      path: "{{ php_fpm_sysvinit_stat.stat.lnk_source }}"
+
+  when: php_fpm_sysvinit_stat.stat.exists == True and php_fpm_sysvinit_stat.stat.islnk == True
+
+- name: Ensure the PHP-FPM SysVinit script has correct permissions
+  file:
+    state: file
+    path: "{{ php_fpm_sysvinit_script }}"
+    mode: '0755'
+    owner: root
+    group: root

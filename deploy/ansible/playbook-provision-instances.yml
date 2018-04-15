@@ -12,6 +12,7 @@
     - hostname
     - linux_user_ec2_user
     - linux_user_nginx
+    - php
     - composer
 
   handlers:
