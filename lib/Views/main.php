@@ -27,7 +27,7 @@
 </head>
 
 <body id="page-top">
-<?php if ($this->config->get('google_analytics')): ?>
+<?php if ($google_analytics): ?>
     <script>
         (function(i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r;

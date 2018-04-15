@@ -11,6 +11,7 @@ namespace BentlerDesign\Http;
 use BentlerDesign\Models\Config;
 use BentlerDesign\Services\Email\SendGrid;
 use BentlerDesign\Services\Logger;
+use BentlerDesign\Helpers\Template;
 use Closure;
 use Exception;
 use GuzzleHttp\Client;
@@ -64,24 +65,38 @@ class Router
         if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['message']) ||
             !filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)) {
 
-            throw new Exception('Missing or invalid POST param.');
+            return false;
         }
 
         $name = strip_tags(htmlspecialchars($_POST['name']));
-        $email_address = strip_tags(htmlspecialchars($_POST['email']));
+        $email = strip_tags(htmlspecialchars($_POST['email']));
         $phone = strip_tags(htmlspecialchars($_POST['phone']));
         $message = strip_tags(htmlspecialchars($_POST['message']));
 
-        $sendGrid->sendEmail($email_address, $name, '', '', "<b>{$message} - {$phone}</b>");
+        $toEmail = $this->config->get('sendgrid_to_email');
+        $toName = $this->config->get('sendgrid_to_name');
+        $subject = 'Contact from bricebentler.com';
+
+        $html = Template::render(PROJECT_ROOT . '/lib/Views/email-to-me.php', [
+            'email_address' => $email,
+            'name' => $name,
+            'phone' => $phone,
+            'message' => $message,
+            'date' => date('Y-m-d H:i:s e'),
+        ]);
+
+        $sendGrid->sendEmail($toEmail, $toName, $subject, null, $html);
+
+        return true;
     }
 
+    /**
+     * @throws Exception
+     */
     private function defaultRoute()
     {
-        ob_start();
-        require(PROJECT_ROOT . '/lib/Views/main.php');
-        $output = ob_get_contents();
-        ob_end_clean();
-
-        echo $output;
+        echo Template::render(PROJECT_ROOT . '/lib/Views/main.php', [
+            'google_analytics' => $this->config->get('google_analytics'),
+        ]);
     }
 }

@@ -32,14 +32,15 @@ try {
     $logFilePath = $config->get('log_path');
     $logger = new Logger($logFilePath);
 } catch (Throwable $e) {
+    http_response_code(500);
     echo "Missing log file path, or directory not writable.";
-    // TODO : RESPONSE CODE.
     exit();
 }
 
 try {
     (new Router($logger, $config))->route();
 } catch (Throwable $e) {
+    http_response_code(500);
     $logger->logException($e);
     echo "An error occurred. Sorry.";
 }

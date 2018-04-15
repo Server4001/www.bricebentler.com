@@ -21,10 +21,11 @@ class Config
     {
         $this->config = [
             'google_analytics' => (getenv('USE_GOOGLE_ANALYTICS') === 'true'),
-            'sendgrid_user' => getenv('SENDGRID_USER'),
-            'sendgrid_pass' => getenv('SENDGRID_PASS'),
+            'sendgrid_api_key' => getenv('SENDGRID_API_KEY'),
             'sendgrid_from_email' => (getenv('SENDGRID_FROM_EMAIL') ?? 'foo@bar.com'),
             'sendgrid_from_name' => (getenv('SENDGRID_FROM_NAME') ?? 'Some Person'),
+            'sendgrid_to_email' => (getenv('SENDGRID_TO_EMAIL') ?? 'bar@baz.com'),
+            'sendgrid_to_name' => (getenv('SENDGRID_TO_NAME') ?? 'Another Person'),
             'log_path' => (getenv('LOG_PATH') ?? '/var/log/nginx/www.log'),
         ];
     }

@@ -18,8 +18,7 @@ use Psr\Http\Message\ResponseInterface;
 
 class SendGrid
 {
-    const MAIL_ENDPOINT = 'https://api.sendgrid.com/api/mail.send.json';
-    const RESPONSE_SUCCESS = 'success';
+    const MAIL_ENDPOINT = 'https://api.sendgrid.com/v3/mail/send';
 
     /**
      * @var Client
@@ -34,12 +33,7 @@ class SendGrid
     /**
      * @var string
      */
-    private $user;
-
-    /**
-     * @var string
-     */
-    private $pass;
+    private $apiKey;
 
     /**
      * @var string
@@ -58,13 +52,12 @@ class SendGrid
     {
         $this->client = $client;
         $this->logger = $logger;
-        $this->user = $config->get('sendgrid_user');
-        $this->pass = $config->get('sendgrid_pass');
+        $this->apiKey = $config->get('sendgrid_api_key');
         $this->fromEmail = $config->get('sendgrid_from_email');
         $this->fromName = $config->get('sendgrid_from_name');
 
-        if ($config->get('sendgrid_user') === false || $config->get('sendgrid_pass') === false) {
-            throw new Exception('Missing sendgrid credentials in config.');
+        if ($this->apiKey === false) {
+            throw new Exception('Missing sendgrid api key in config.');
         }
     }
 
@@ -76,14 +69,16 @@ class SendGrid
         string $toName,
         string $subject,
         string $text = null,
-        string $html = null,
-        array $files = []): SendGrid
+        string $html = null): SendGrid
     {
-        $payload = $this->createRequestPayload($toEmail, $toName, $subject, $text, $html, $files);
+        $payload = $this->createRequestPayload($toEmail, $toName, $subject, $text, $html);
 
-        $response = $this->client->post(self::MAIL_ENDPOINT, array(
-            RequestOptions::FORM_PARAMS => $payload,
-        ));
+        $response = $this->client->post(self::MAIL_ENDPOINT, [
+            RequestOptions::JSON => $payload,
+            RequestOptions::HEADERS => [
+                'authorization' => "Bearer {$this->apiKey}",
+            ],
+        ]);
 
         return $this->handleSyncResponse($response);
     }
@@ -93,32 +88,41 @@ class SendGrid
         string $toName,
         string $subject,
         string $text = null,
-        string $html = null,
-        array $files = []): array
+        string $html = null): array
     {
         if (is_null($text) && is_null($html)) {
             throw new InvalidArgumentException('Must set text and/or html.');
         }
 
-        $payload = array(
-            'api_user' => $this->user,
-            'api_key' => $this->pass,
-            'to' => $toEmail,
-            'toname' => $toName,
+        $payload = [
+            'personalizations' => [
+                [
+                    'to' => [
+                        [
+                            'email' => $toEmail,
+                            'name' => $toName,
+                        ],
+                    ],
+                ],
+            ],
+            'from' => [
+                'email' => $this->fromEmail,
+                'name' => $this->fromName,
+            ],
             'subject' => $subject,
-            'from' => $this->fromEmail,
-            'fromname' => $this->fromName,
-        );
+        ];
 
         if (!is_null($text)) {
-            $payload['text'] = $text;
+            $payload['content'][] = [
+                'type' => 'text/plain',
+                'value' => $text,
+            ];
         }
         if (!is_null($html)) {
-            $payload['html'] = $html;
-        }
-
-        foreach ($files as $fileName => $fileContents) {
-            $payload['files'][$fileName] = $fileContents;
+            $payload['content'][] = [
+                'type' => 'text/html',
+                'value' => $html,
+            ];
         }
 
         return $payload;
@@ -131,18 +135,8 @@ class SendGrid
     {
         $statusCode = $response->getStatusCode();
 
-        if ($statusCode !== 200) {
+        if ($statusCode !== 202) {
             throw new Exception("Invalid status code returned from SendGrid: '{$statusCode}'.");
-        }
-
-        $responseBodyContents = $response->getBody()->getContents();
-        $responseBody = \GuzzleHttp\json_decode($responseBodyContents, true);
-
-        if (!is_array($responseBody)) {
-            throw new Exception("Invalid response body returned from SendGrid: '{$responseBodyContents}'.");
-        }
-        if (!isset($responseBody['message']) || $responseBody['message'] !== self::RESPONSE_SUCCESS) {
-            throw new Exception("Invalid message in SendGrid response body: '{$responseBody['message']}'.");
         }
 
         return $this;
