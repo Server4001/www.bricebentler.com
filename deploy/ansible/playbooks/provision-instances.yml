@@ -1,0 +1,13 @@
+---
+- name: Fully provision a bricebentler.com EC2 instance from scratch
+  hosts: tag_name_bricebentler.com
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  force_handlers: true
+  any_errors_fatal: true
+
+  roles:
+
+  handlers:
+    - include: handlers/handlers.yml

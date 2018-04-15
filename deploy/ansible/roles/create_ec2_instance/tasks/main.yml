@@ -1,0 +1,32 @@
+---
+- name: Create a bricebentler.com EC2 instance
+  ec2:
+    state: present
+    key_name: BricePersonalAWS
+    instance_type: t2.nano
+    image: "{{ ec2_instance_ami_id }}"
+    wait: yes
+    wait_timeout: 360
+    group_id: "{{ ec2_instance_sec_group_ids }}"
+    count: 1
+    vpc_subnet_id: "{{ ec2_instance_subnet_id }}"
+    assign_public_ip: yes
+    monitoring: no
+    instance_tags:
+      Name: bricebentler.com
+    volumes:
+      - device_name: /dev/xvda
+        snapshot: "{{ ec2_instance_root_snap_id }}"
+        volume_type: gp2
+        volume_size: 8
+        delete_on_termination: true
+  register: create_ec2_instance_output
+
+- name: Wait for SSH to come up
+  wait_for:
+    state: started
+    host: "{{ item.public_dns_name }}"
+    port: 22
+    delay: 60
+    timeout: 300
+  with_items: "{{ create_ec2_instance_output.instances }}"
