@@ -1,0 +1,14 @@
+# {{ ansible_managed }}
+# .bashrc
+
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
+
+# User specific aliases and functions
+alias ll="ls -lah"
+
+diffcolor() {
+    diff -u ${1} ${2} | colordiff
+}
