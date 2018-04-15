@@ -1,0 +1,11 @@
+---
+- name: Deploy the bricebentler.com application, no other provisioning
+  hosts: tag_Name_bricebentler_com
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  force_handlers: true
+  any_errors_fatal: true
+
+  roles:
+    # TODO : THIS

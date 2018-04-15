@@ -25,5 +25,6 @@ aws_access_key:aws_secret_key
 * Run: `vagrant up deploy`
 * Run: `vagrant ssh deploy`
 * Run: `cd /vagrant/deploy/ansible/`
-* Create then provision all instances with: `ansible-playbook playbook-create-instance.yml`
+* Create a new EC2 instance with: `ansible-playbook playbook-create-instance.yml`
 * Provision all instances with: `ansible-playbook playbook-provision-instances.yml`
+* Deploy bricebentler.com (no other provisioning) with: `ansible-playbook playbook-deploy.yml`
