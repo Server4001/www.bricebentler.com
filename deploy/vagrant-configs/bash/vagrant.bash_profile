@@ -23,4 +23,4 @@ PS1="$GREEN\u@\h$NO_COLOR:\n\$ "
 
 export ANSIBLE_VAULT_PASSWORD_FILE="/scripts/ansible_vault"
 source $HOME/aws_creds.sh
-EC2_REGION='us-west-2'
+export EC2_REGION='us-west-2'

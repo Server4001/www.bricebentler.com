@@ -13,7 +13,8 @@
     assign_public_ip: yes
     monitoring: no
     instance_tags:
-      Name: bricebentler.com
+      Name: 'bricebentler.com'
+      config_management: 'ansible'
     volumes:
       - device_name: /dev/xvda
         snapshot: "{{ ec2_instance_root_snap_id }}"

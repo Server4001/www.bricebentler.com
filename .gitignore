@@ -5,3 +5,4 @@
 /tests/coverage
 /deploy/ansible/scripts/ansible_vault
 /deploy/ansible/scripts/aws_cli_creds
+/deploy/ansible/*.retry

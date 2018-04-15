@@ -1,10 +1,10 @@
 ---
 - name: Create a bricebentler.com EC2 instance
-  hosts: localhost
+  hosts: loopback
   connection: local
   gather_facts: False
 
   roles:
     - create_ec2_instance
 
-- include: playbooks/provision-instances.yml
+- import_playbook: playbook-provision-instances.yml

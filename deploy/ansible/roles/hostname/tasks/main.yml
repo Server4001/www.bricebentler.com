@@ -1,0 +1,8 @@
+---
+- name: Create hostname prefix fact if not set
+  set_fact: hostname_prefix='bricebentler-com'
+  when: hostname_prefix is not defined
+
+- name: Set the hostname
+  hostname:
+    name: "{{ hostname_prefix|replace(' ', '-') }}-{{ ansible_default_ipv4.address|replace('.', '-') }}"
