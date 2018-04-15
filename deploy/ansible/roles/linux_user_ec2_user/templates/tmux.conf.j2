@@ -1,0 +1,106 @@
+# {{ ansible_managed }}
+# Setting the prefix from CTRL-b to CTRL-a
+set -g prefix C-a
+
+# Fix issues with pbcopy.
+set-option -g default-command "reattach-to-user-namespace -l $SHELL"
+
+# Free up CTRL-b since we set the prefix to CTRL-a
+unbind C-b
+
+# Increase the delay time
+set -sg escape-time 1
+
+# Window index will start at 1 instead of 0
+set -g base-index 1
+
+# Pane index will start at 1 instead of 0
+setw -g pane-base-index 1
+
+# Reload this config file via PREFIX r then display a message to the user
+bind r source-file ~/.tmux.conf \; display "Reloaded!"
+
+# Since vim, emacs, etc use PREFIX a, send the command through by pressing it twice
+bind C-a send-prefix
+
+# Split a window horizontally with PREFIX |
+bind | split-window -h
+
+# Split a window vertically with PREFIX -
+bind - split-window -v
+
+# Move the vertical (seperating left and right) pane bar to the left using PREFIX H (repeatable)
+bind -r H resize-pane -L 5
+
+# Move the horizontal (seperating top and bottom) pane bar down using PREFIX J (repeatable)
+bind -r J resize-pane -D 5
+
+# Move the horizontal (seperating top and bottom) pane bar up using PREFIX K (repeatable)
+bind -r K resize-pane -U 5
+
+# Move the vertical (seperating left and right) pane bar to the right using PREFIX L (repeatable)
+bind -r L resize-pane -R 5
+
+# Change the time between repeat command key presses from 500ms to 800ms
+set -g repeat-time 1000
+
+# Make tmux display things in 256 colors
+set -g default-terminal "screen-256color"
+
+# Change the status bar colors to white on black
+set -g status-fg white
+set -g status-bg black
+
+# Change the color of regular windows
+setw -g window-status-fg cyan
+setw -g window-status-bg default
+setw -g window-status-attr dim
+
+# Change the color of active window
+setw -g window-status-current-fg white
+setw -g window-status-current-bg red
+setw -g window-status-current-attr bright
+
+# Change the color of inactive panes
+set -g pane-border-fg green
+set -g pane-border-bg black
+
+# Change the color of active pane
+set -g pane-active-border-fg white
+set -g pane-active-border-bg yellow
+
+# Change the color of the command line
+set -g message-fg white
+set -g message-bg black
+set -g message-attr bright
+
+# Change the contents of the status bar left text
+set -g status-left "#[fg=green]Session: #S #[fg=yellow]#I #[fg=cyan]#P"
+
+# Change the contents of the status bar right text
+set -g status-right "#[fg=cyan]%a, %b %d %R"
+
+# Change the length of the status bar left text to 40 chars
+set -g status-left-length 40
+
+# Turn on UTF-8 for the status bar
+set -g status-utf8 on
+
+# Change the amount of time till status bar refreshes in seconds
+set -g status-interval 45
+
+# Center the list of windows in the status bar
+set -g status-justify centre
+
+# Add notification of window activity (flash "Activity in window x" and cyan background in status bar)
+setw -g monitor-activity on
+set -g visual-activity on
+
+# Enable vi mode for working with the buffer
+setw -g mode-keys vi
+
+# Increase the default limit for window scrolling history (default 2000):
+set-option -g history-limit 8000
+
+# Tmux Copycat (https://github.com/tmux-plugins/tmux-copycat):
+run-shell /usr/lib/tmux-copycat/copycat.tmux

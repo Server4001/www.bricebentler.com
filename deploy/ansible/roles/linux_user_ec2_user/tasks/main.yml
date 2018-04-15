@@ -1,0 +1,16 @@
+---
+- name: Copy the tmux configuration file for ec2-user
+  template:
+    src: tmux.conf.j2
+    dest: /home/ec2-user/.tmux.conf
+    mode: 0644
+    owner: ec2-user
+    group: ec2-user
+
+- name: Copy the vimrc file for ec2-user
+  template:
+    src: vimrc.j2
+    dest: /home/ec2-user/.vimrc
+    mode: 0644
+    owner: ec2-user
+    group: ec2-user

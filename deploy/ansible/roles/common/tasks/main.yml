@@ -1,0 +1,30 @@
+---
+- name: Install common packages in amzn-main repo
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - tree
+    - libselinux-python
+    - tmux
+    - xfsprogs
+    - python27-pip
+    - python27-tools
+
+- name: Install common packages in EPEL repo
+  yum:
+    name: "{{ item }}"
+    state: present
+    enablerepo: epel
+  with_items:
+    - bash-completion
+    - colordiff
+
+- name: Clone the tmux-copycat plugin
+  git:
+    repo: 'https://github.com/tmux-plugins/tmux-copycat.git'
+    dest: '/usr/lib/tmux-copycat'
+    clone: yes
+    update: yes
+    version: 'v3.0.0'

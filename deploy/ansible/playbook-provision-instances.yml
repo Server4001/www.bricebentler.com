@@ -8,7 +8,9 @@
   any_errors_fatal: true
 
   roles:
+    - common
     - hostname
+    - linux_user_ec2_user
 
   handlers:
     - include: handlers/handlers.yml
