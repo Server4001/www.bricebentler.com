@@ -1,8 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-  <head>
-
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="description" content="">
@@ -23,7 +21,6 @@
 
     <!-- Custom styles for this template -->
     <link href="/css/freelancer.min.css" rel="stylesheet">
-
 </head>
 
 <body id="page-top">
@@ -58,7 +55,7 @@
         <div class="collapse navbar-collapse" id="navbarResponsive">
             <ul class="navbar-nav ml-auto">
                 <li class="nav-item mx-0 mx-lg-1">
-                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Portfolio</a>
+                    <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#portfolio">Projects</a>
                 </li>
                 <li class="nav-item mx-0 mx-lg-1">
                     <a class="nav-link py-3 px-0 px-lg-3 rounded js-scroll-trigger" href="#about">About</a>
@@ -84,68 +81,18 @@
 <!-- Portfolio Grid Section -->
 <section class="portfolio" id="portfolio">
     <div class="container">
-        <h2 class="text-center text-uppercase text-secondary mb-0">Portfolio</h2>
+        <h2 class="text-center text-uppercase text-secondary mb-0">Projects</h2>
         <hr class="star-dark mb-5">
         <div class="row">
-            <div class="col-md-6 col-lg-4">
-                <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-1">
-                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                            <i class="fa fa-search-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img class="img-fluid" src="/img/portfolio/cabin.png" alt="">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-2">
-                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                            <i class="fa fa-search-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img class="img-fluid" src="/img/portfolio/cake.png" alt="">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-3">
-                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                            <i class="fa fa-search-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img class="img-fluid" src="/img/portfolio/circus.png" alt="">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-4">
-                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                            <i class="fa fa-search-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img class="img-fluid" src="/img/portfolio/game.png" alt="">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-5">
-                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                            <i class="fa fa-search-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img class="img-fluid" src="/img/portfolio/safe.png" alt="">
-                </a>
-            </div>
-            <div class="col-md-6 col-lg-4">
-                <a class="portfolio-item d-block mx-auto" href="#portfolio-modal-6">
-                    <div class="portfolio-item-caption d-flex position-absolute h-100 w-100">
-                        <div class="portfolio-item-caption-content my-auto w-100 text-center text-white">
-                            <i class="fa fa-search-plus fa-3x"></i>
-                        </div>
-                    </div>
-                    <img class="img-fluid" src="/img/portfolio/submarine.png" alt="">
-                </a>
+            <div class="col-lg-8 mx-auto">
+                <ul class="lead">
+                    <li><a href="https://github.com/Server4001/lr-server" target="_blank">lr-server</a>: A live reload server written in Node.js that reloads your browser when you make code changes.</li>
+                    <li><a href="https://github.com/Server4001/custom-yum-repo" target="_blank">custom-yum-repo</a>: Host your own RPMs with a custom YUM repo, provisioned by <a href="https://puppet.com/" target="_blank">puppet</a>.</li>
+                    <li><a href="https://github.com/Server4001/icinga-aws-autoscaling" target="_blank">icinga-aws-autoscaling</a>: An AWS Lambda function written in Node.js that updates Icinga inventory based on AWS auto-scaling group changes.</li>
+                    <li><a href="https://github.com/Server4001/icinga-nrpe" target="_blank">icinga-nrpe</a>: A sandbox Icinga environment used to test out <a href="https://www.icinga.com/products/icinga-2/" target="_blank">Icinga</a> and <a href="https://exchange.nagios.org/directory/Addons/Monitoring-Agents/NRPE--2D-Nagios-Remote-Plugin-Executor/details" target="_blank">NRPE</a> configurations.</li>
+                    <li><a href="https://github.com/Server4001/php7-centos-vagrant-box-source" target="_blank">php7-centos-vagrant-box-source</a>: A CentOS Vagrant box with PHP7 provisioned by <a href="http://docs.ansible.com/ansible/latest/index.html" target="_blank">Ansible</a>.</li>
+                    <li><a href="https://github.com/Server4001/jenkins-php-app" target="_blank">jenkins-php-app</a>: A simple PHP application used to test <a href="https://jenkins.io/" target="_blank">Jenkins</a> CI and CD pipelines.</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -158,10 +105,10 @@
         <hr class="star-light mb-5">
         <div class="row">
             <div class="col-lg-4 ml-auto">
-                <p class="lead">My name is Brice. I'm a long time software engineer who switched to DevOps a few years back.<br>I'm passionate about automating manual processes and managing cloud infrastructure in Amazon Web Services and Microsoft Azure.</p>
+                <p class="lead">My name is Brice. I'm a long time software engineer who loves DevOps.<br>I'm passionate about automating manual processes and managing cloud infrastructure in Amazon Web Services and Microsoft Azure.</p>
             </div>
             <div class="col-lg-4 mr-auto">
-                <p class="lead">I enjoy using tooling like Jenkins, Vagrant, and Rundeck. Configuration management with Ansible and Puppet is also neat. I also know a lot about Object Oriented Programming. If you would like to learn more about me: TODO : MAKE SURE THIS IS NEXT TO THE DOWNLOAD LINK.</p>
+                <p class="lead">I enjoy using tools like Jenkins, Docker, Ansible and Puppet. I also know a lot about Object Oriented Programming. If you would like to learn more about me, check out my resume or shoot me an email.</p>
             </div>
         </div>
         <div class="row">
@@ -169,7 +116,7 @@
                 <p class="lead">Things I am good at:</p>
                 <ul>
                     <li>Automation</li>
-                    <li>Docker (containers)</li>
+                    <li>Configuring cloud infrastructure</li>
                     <li>Scripting in Bash, PHP, Ruby, and Python</li>
                     <li>Object oriented programming</li>
                     <li>Architecting scalable solutions</li>
@@ -180,12 +127,14 @@
                 <ul>
                     <li>CSS</li>
                     <li>Design</li>
-                    <li>Front end development</li>
+                    <li>Windows</li>
+                    <li>Tightrope walking</li>
+                    <li>Painting houses</li>
                 </ul>
             </div>
         </div>
         <div class="text-center mt-4">
-            <a class="btn btn-xl btn-outline-light" href="#">
+            <a class="btn btn-xl btn-outline-light" href="<?=$resume_link?>">
                 <i class="fa fa-download mr-2"></i>
                 Download My Resume!
             </a>
@@ -252,44 +201,33 @@
     <div class="container">
         <div class="row">
             <div class="col-md-4 mb-5 mb-lg-0">
-                <h4 class="text-uppercase mb-4">Location</h4>
-                <p class="lead mb-0">2215 John Daniel Drive
-                    <br>Clark, MO 65243</p>
+                <h4 class="text-uppercase mb-4">My Resume</h4>
+                <p class="lead mb-0"><a href="<?=$resume_link?>">Download Here</a></p>
             </div>
             <div class="col-md-4 mb-5 mb-lg-0">
-                <h4 class="text-uppercase mb-4">Around the Web</h4>
+                <h4 class="text-uppercase mb-4">Social Media</h4>
                 <ul class="list-inline mb-0">
                     <li class="list-inline-item">
-                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
-                            <i class="fa fa-fw fa-facebook"></i>
+                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="https://github.com/server4001" target="_blank">
+                            <i class="fa fa-fw fa-github"></i>
                         </a>
                     </li>
                     <li class="list-inline-item">
-                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
-                            <i class="fa fa-fw fa-google-plus"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="https://twitter.com/server4001" target="_blank">
                             <i class="fa fa-fw fa-twitter"></i>
                         </a>
                     </li>
                     <li class="list-inline-item">
-                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
+                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="https://www.linkedin.com/in/brice-bentler-3b00a06b/" target="_blank">
                             <i class="fa fa-fw fa-linkedin"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item">
-                        <a class="btn btn-outline-light btn-social text-center rounded-circle" href="#">
-                            <i class="fa fa-fw fa-dribbble"></i>
                         </a>
                     </li>
                 </ul>
             </div>
             <div class="col-md-4">
-                <h4 class="text-uppercase mb-4">About Freelancer</h4>
+                <h4 class="text-uppercase mb-4">This theme</h4>
                 <p class="lead mb-0">Freelance is a free to use, open source Bootstrap theme created by
-                    <a href="http://startbootstrap.com">Brice Bentler</a>.</p>
+                    <a href="http://startbootstrap.com">Start Bootstrap</a>.</p>
             </div>
         </div>
     </div>
@@ -297,7 +235,7 @@
 
 <div class="copyright py-4 text-center text-white">
     <div class="container">
-        <small>Copyright &copy; Your Website 2018</small>
+        <small>&copy;2018 Bentler Design</small>
     </div>
 </div>
 
@@ -306,134 +244,6 @@
     <a class="js-scroll-trigger d-block text-center text-white rounded" href="#page-top">
         <i class="fa fa-chevron-up"></i>
     </a>
-</div>
-
-<!-- Portfolio Modals -->
-
-<!-- Portfolio Modal 1 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-1">
-    <div class="portfolio-modal-dialog bg-white">
-        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-            <i class="fa fa-3x fa-times"></i>
-        </a>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
-                    <hr class="star-dark mb-5">
-                    <p class="mb-5">https://github.com/Server4001/lr-server</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
-                        <i class="fa fa-close"></i>
-                        Close Project</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Portfolio Modal 2 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-2">
-    <div class="portfolio-modal-dialog bg-white">
-        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-            <i class="fa fa-3x fa-times"></i>
-        </a>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
-                    <hr class="star-dark mb-5">
-                    <p class="mb-5">https://github.com/Server4001/custom-yum-repo</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
-                        <i class="fa fa-close"></i>
-                        Close Project</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Portfolio Modal 3 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-3">
-    <div class="portfolio-modal-dialog bg-white">
-        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-            <i class="fa fa-3x fa-times"></i>
-        </a>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
-                    <hr class="star-dark mb-5">
-                    <p class="mb-5">https://github.com/Server4001/icinga-aws-autoscaling</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
-                        <i class="fa fa-close"></i>
-                        Close Project</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Portfolio Modal 4 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-4">
-    <div class="portfolio-modal-dialog bg-white">
-        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-            <i class="fa fa-3x fa-times"></i>
-        </a>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
-                    <hr class="star-dark mb-5">
-                    <p class="mb-5">https://github.com/Server4001/icinga-nrpe</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
-                        <i class="fa fa-close"></i>
-                        Close Project</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Portfolio Modal 5 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-5">
-    <div class="portfolio-modal-dialog bg-white">
-        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-            <i class="fa fa-3x fa-times"></i>
-        </a>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
-                    <hr class="star-dark mb-5">
-                    <p class="mb-5">https://github.com/Server4001/php7-centos-vagrant-box-source</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
-                        <i class="fa fa-close"></i>
-                        Close Project</a>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- Portfolio Modal 6 -->
-<div class="portfolio-modal mfp-hide" id="portfolio-modal-6">
-    <div class="portfolio-modal-dialog bg-white">
-        <a class="close-button d-none d-md-block portfolio-modal-dismiss" href="#">
-            <i class="fa fa-3x fa-times"></i>
-        </a>
-        <div class="container text-center">
-            <div class="row">
-                <div class="col-lg-8 mx-auto">
-                    <h2 class="text-secondary text-uppercase mb-0">Project Name</h2>
-                    <hr class="star-dark mb-5">
-                    <p class="mb-5">https://github.com/Server4001/jenkins-php-app</p>
-                    <a class="btn btn-primary btn-lg rounded-pill portfolio-modal-dismiss" href="#">
-                        <i class="fa fa-close"></i>
-                        Close Project</a>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 
 <!-- Bootstrap core JavaScript -->

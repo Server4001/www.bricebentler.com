@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 /**
- * @category     Views
+ * @category     Helpers
  * @package      BriceBentler.com
  * @copyright    Copyright (c) 2018 Bentler Design
  * @author       Brice Bentler <me@bricebentler.com>

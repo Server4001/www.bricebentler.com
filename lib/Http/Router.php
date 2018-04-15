@@ -8,9 +8,9 @@
 
 namespace BentlerDesign\Http;
 
+use BentlerDesign\Helpers\Dates;
 use BentlerDesign\Models\Config;
 use BentlerDesign\Services\Email\SendGrid;
-use BentlerDesign\Services\Logger;
 use BentlerDesign\Helpers\Template;
 use Closure;
 use Exception;
@@ -19,18 +19,12 @@ use GuzzleHttp\Client;
 class Router
 {
     /**
-     * @var Logger
-     */
-    private $logger;
-
-    /**
      * @var Config
      */
     private $config;
 
-    public function __construct(Logger $logger, Config $config)
+    public function __construct(Config $config)
     {
-        $this->logger = $logger;
         $this->config = $config;
     }
 
@@ -60,7 +54,7 @@ class Router
      */
     private function mailRoute()
     {
-        $sendGrid = new SendGrid(new Client(), $this->config, $this->logger);
+        $sendGrid = new SendGrid(new Client(), $this->config);
 
         if(empty($_POST['name']) || empty($_POST['email']) || empty($_POST['phone']) || empty($_POST['message']) ||
             !filter_var($_POST['email'],FILTER_VALIDATE_EMAIL)) {
@@ -82,7 +76,7 @@ class Router
             'name' => $name,
             'phone' => $phone,
             'message' => $message,
-            'date' => date('Y-m-d H:i:s e'),
+            'date' => Dates::currentTime('America/Los_Angeles'),
         ]);
 
         $sendGrid->sendEmail($toEmail, $toName, $subject, null, $html);
@@ -97,6 +91,7 @@ class Router
     {
         echo Template::render(PROJECT_ROOT . '/lib/Views/main.php', [
             'google_analytics' => $this->config->get('google_analytics'),
+            'resume_link' => '/static/BriceBentlerDevOpsResumeFinalDraft.pdf',
         ]);
     }
 }

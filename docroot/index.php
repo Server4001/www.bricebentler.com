@@ -38,7 +38,7 @@ try {
 }
 
 try {
-    (new Router($logger, $config))->route();
+    (new Router($config))->route();
 } catch (Throwable $e) {
     http_response_code(500);
     $logger->logException($e);
