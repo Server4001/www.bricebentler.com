@@ -9,7 +9,6 @@
 namespace BentlerDesign\Services\Email;
 
 use BentlerDesign\Models\Config;
-use BentlerDesign\Services\Logger;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -24,11 +23,6 @@ class SendGrid
      * @var Client
      */
     private $client;
-
-    /**
-     * @var Logger
-     */
-    private $logger;
 
     /**
      * @var string
@@ -48,10 +42,9 @@ class SendGrid
     /**
      * @throws Exception
      */
-    public function __construct(Client $client, Config $config, Logger $logger)
+    public function __construct(Client $client, Config $config)
     {
         $this->client = $client;
-        $this->logger = $logger;
         $this->apiKey = $config->get('sendgrid_api_key');
         $this->fromEmail = $config->get('sendgrid_from_email');
         $this->fromName = $config->get('sendgrid_from_name');

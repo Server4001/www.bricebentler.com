@@ -2,9 +2,6 @@
     "name": "server4001/bricebentler.com",
     "description": "My personal website.",
     "license": "proprietary",
-    "require-dev": {
-        "phpunit/phpunit": "~5.7"
-    },
     "autoload": {
         "psr-4": {
             "BentlerDesign\\": "lib/"
@@ -18,5 +15,8 @@
     "require": {
         "vlucas/phpdotenv": "^2.0",
         "guzzlehttp/guzzle": "^6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "~5.7"
     }
 }
