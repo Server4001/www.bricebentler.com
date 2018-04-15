@@ -93,6 +93,11 @@ ansible-vault decrypt ${VAGRANT_SSH_DIR}/id_rsa ${VAGRANT_SSH_DIR}/id_rsa.pub
 chown vagrant:vagrant ${VAGRANT_SSH_DIR}/id_rsa ${VAGRANT_SSH_DIR}/id_rsa.pub
 chmod 0600 ${VAGRANT_SSH_DIR}/id_rsa ${VAGRANT_SSH_DIR}/id_rsa.pub
 
+# Copy over SSH config.
+cp /vagrant/deploy/vagrant-configs/ssh/config.vagrant ${VAGRANT_SSH_DIR}/config
+chown vagrant:vagrant ${VAGRANT_SSH_DIR}/config
+chmod 0600 ${VAGRANT_SSH_DIR}/config
+
 if [ ! `pgrep -f 'ssh-agent'` ]; then
     # Start up the SSH agent.
     eval "$(ssh-agent -s)"
