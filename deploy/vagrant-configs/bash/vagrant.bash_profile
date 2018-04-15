@@ -11,6 +11,10 @@ PATH=$PATH:$HOME/.local/bin:$HOME/bin
 
 export PATH
 
+function parse_git_branch () {
+    git branch 2> /dev/null | sed -e '/^[^​*]/d' -e 's/*​ \(.*\)/ (\1)/'
+}
+
 export CLICOLOR=1
 export LSCOLORS=Gxfxcxdxbxegedabagacad
 
@@ -19,7 +23,7 @@ YELLOW="\[\033[0;33m\]"
 GREEN="\[\033[0;32m\]"
 NO_COLOR="\[\033[0m\]"
 
-PS1="$GREEN\u@\h$NO_COLOR:\n\$ "
+PS1="$GREEN\u@\h$NO_COLOR:\w$RED\$(parse_git_branch)$NO_COLOR\n\$ "
 
 export ANSIBLE_VAULT_PASSWORD_FILE="/scripts/ansible_vault"
 source $HOME/aws_creds.sh

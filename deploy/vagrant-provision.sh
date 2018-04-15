@@ -3,6 +3,7 @@
 ANSIBLE_VERSION=2.5.0
 
 VAGRANT_BASHRC=/home/vagrant/.bashrc
+VAGRANT_BASH_PROFILE=/home/vagrant/.bash_profile
 ROOT_BASHRC=/root/.bashrc
 VAGRANT_AWS_CREDS_FILE=/home/vagrant/aws_creds.sh
 VAGRANT_SSH_DIR=/home/vagrant/.ssh
@@ -77,8 +78,8 @@ cp /vagrant/deploy/vagrant-configs/bash/root.bashrc ${ROOT_BASHRC}
 source ${ROOT_BASHRC}
 
 # Custom .bash_profile.
-cp /vagrant/deploy/vagrant-configs/bash/vagrant.bash_profile /home/vagrant/.bash_profile
-chown vagrant:vagrant /home/vagrant/.bash_profile
+cp /vagrant/deploy/vagrant-configs/bash/vagrant.bash_profile ${VAGRANT_BASH_PROFILE}
+chown vagrant:vagrant ${VAGRANT_BASH_PROFILE}
 
 # Create vagrant .ssh directory.
 mkdir -p ${VAGRANT_SSH_DIR}
