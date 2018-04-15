@@ -16,7 +16,7 @@
 - name: Update the logrotate config for PHP-FPM
   template:
     src: php-fpm/php-fpm.logrotate.j2
-    dest: "/etc/logrotate.d/php-fpm-7.1"
+    dest: "{{ logrotate_configs_path }}/php-fpm-7.1"
     mode: 0644
     owner: root
     group: root

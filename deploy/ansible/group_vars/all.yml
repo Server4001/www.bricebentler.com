@@ -1,2 +1,4 @@
 ---
 nginx_bricebentler_web_root: '/var/www/html'
+
+logrotate_configs_path: '/etc/logrotate.d'
