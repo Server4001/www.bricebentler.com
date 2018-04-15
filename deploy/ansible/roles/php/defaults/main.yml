@@ -42,3 +42,6 @@ php_fpm_catch_workers_output: 'no'
 
 php_fpm_bricebentler_socket_file: "{{ php_fpm_sockets_path }}/bricebentler.socket"
 php_fpm_bricebentler_error_log: "{{ application_logs_path }}/bricebentler-error.log"
+
+php_opcache_max_files: 2000
+php_opcache_memory: 128
