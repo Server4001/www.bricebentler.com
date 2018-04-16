@@ -34,6 +34,14 @@
     msg: "Allocated Elastic IP: '{{ item.public_ip }}'"
   with_items: "{{ create_eip_output.results }}"
 
+- name: Add name tag to the EIP
+  ec2_tag:
+    resource: "{{ item.allocation_id }}"
+    state: present
+    tags:
+      Name: 'bricebentler.com'
+  with_items: "{{ create_eip_output.results }}"
+
 - name: Set fact containing EC2 instance public DNS
   set_fact:
     create_ec2_instance_public_dns: "ec2-{{ create_eip_output.results[0].public_ip|replace('.', '-') }}.us-west-2.compute.amazonaws.com"
