@@ -1,0 +1,29 @@
+---
+- name: Stat the SSL certificate
+  stat:
+    path: "{{ lets_encrypt_certs_path }}/fullchain.pem"
+  register: lets_encrypt_certs_stat
+
+# If the certificate does NOT exist, or it is older than 30 days, create/renew it.
+- name: Determine if SSL certs need to be generated/renewed
+  set_fact: lets_encrypt_generate_certs="{{ (lets_encrypt_certs_stat.stat.exists == False) or (ansible_date_time.epoch|float - lets_encrypt_certs_stat.stat.mtime > 60*60*24*30) }}"
+
+- name: Generate/renew the SSL certs via lets encrypt and certbot
+  command: >
+    {{ lets_encrypt_certbot_path }} certonly
+    --email {{ lets_encrypt_email_address }}
+    --webroot-path {{ bricebentler_docroot }}
+    --domain {{ lets_encrypt_domains_list.apex }}
+    --webroot-path {{ bricebentler_docroot }}
+    --domain {{ lets_encrypt_domains_list.www }}
+    --agree-tos
+    --webroot
+    --debug
+    --non-interactive
+  register: lets_encrypt_certbot_output
+  when: lets_encrypt_generate_certs
+
+- name: Delete the well known directory
+  file:
+    state: absent
+    path: "{{ bricebentler_docroot }}/.well-known"

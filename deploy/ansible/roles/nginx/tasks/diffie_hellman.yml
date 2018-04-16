@@ -1,0 +1,9 @@
+---
+- name: Stat the dhparam file
+  stat:
+    path: "{{ nginx_dh_param_path }}"
+  register: nginx_dh_param_stat
+
+- name: Create the Diffie-Hellman param key
+  command: "/usr/bin/openssl dhparam -out {{ nginx_dh_param_path }} 2048"
+  when: nginx_dh_param_stat.stat.exists == False

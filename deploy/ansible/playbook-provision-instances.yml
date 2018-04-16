@@ -12,7 +12,10 @@
     - hostname
     - linux_user_ec2_user
     - linux_user_nginx
+    - { role: nginx, pre_lets_encrypt: True }
     - php
+    - lets_encrypt
+    - { role: nginx, pre_lets_encrypt: False }
     - composer
     - postfix
 

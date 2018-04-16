@@ -1,4 +1,5 @@
 ---
-nginx_bricebentler_web_root: '/var/www/html'
+bricebentler_app_root: '/var/www/html'
+bricebentler_docroot: "{{ bricebentler_app_root }}/docroot"
 
 logrotate_configs_path: '/etc/logrotate.d'

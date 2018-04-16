@@ -1,0 +1,2 @@
+---
+nginx_dh_param_path: '/etc/ssl/certs/dhparam.pem'
