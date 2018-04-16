@@ -4,3 +4,4 @@ ec2_instance_sec_group_ids:
   - 'sg-0a6689792e68841ff'
 ec2_instance_subnet_id: 'subnet-984be2ff'
 ec2_instance_root_snap_id: 'snap-0c46035e3fc6b0341'
+ec2_instance_dns_ttl: 300
