@@ -1,2 +1,15 @@
 ---
+- name: Install the nginx package
+  yum:
+    state: present
+    name: nginx
+
+- name: Start the nginx service
+  service:
+    state: started
+    name: nginx
+    enabled: true
+
 - include: diffie_hellman.yml
+
+- include: configure.yml

@@ -1,5 +1,12 @@
 ---
+application_logs_path: '/var/log/www'
+
 bricebentler_app_root: '/var/www/html'
 bricebentler_docroot: "{{ bricebentler_app_root }}/docroot"
 
+lets_encrypt_certs_path: '/etc/letsencrypt/live/bricebentler.com'
+
 logrotate_configs_path: '/etc/logrotate.d'
+
+php_fpm_sockets_path: '/var/run/php-fpm'
+php_fpm_bricebentler_socket_file: "{{ php_fpm_sockets_path }}/bricebentler.socket"

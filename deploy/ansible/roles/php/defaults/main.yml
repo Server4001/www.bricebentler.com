@@ -18,11 +18,9 @@ php_var_lib_path: '/var/lib/php/7.1'
 php_extension_configs_path: '/etc/php-7.1.d'
 php_fpm_global_config_file: '/etc/php-fpm-7.1.conf'
 php_fpm_pool_confs_path: '/etc/php-fpm-7.1.d'
-php_fpm_sockets_path: '/var/run/php-fpm'
 php_fpm_logs_path: '/var/log/php-fpm'
 php_fpm_daemon_pid_path: '/var/run/php-fpm/php-fpm-7.1.pid'
 php_fpm_daemon_error_log: "{{ php_fpm_logs_path }}/error.log"
-application_logs_path: '/var/log/www'
 
 php_memory_limit: '64M'
 php_expose_php: 'Off'
@@ -40,8 +38,7 @@ php_fpm_pool_max_spare_servers: 35
 php_fpm_pool_max_requests: 750
 php_fpm_catch_workers_output: 'no'
 
-php_fpm_bricebentler_socket_file: "{{ php_fpm_sockets_path }}/bricebentler.socket"
-php_fpm_bricebentler_error_log: "{{ application_logs_path }}/bricebentler-error.log"
+php_fpm_bricebentler_error_log: "{{ application_logs_path }}/bricebentler.phpfpm.error.log"
 
 php_opcache_max_files: 2000
 php_opcache_memory: 128

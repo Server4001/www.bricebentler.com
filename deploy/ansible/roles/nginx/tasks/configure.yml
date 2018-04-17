@@ -1,0 +1,28 @@
+---
+- name: Configure main nginx file
+  template:
+    src: main.conf.j2
+    dest: "{{ nginx_configs_path }}/nginx.conf"
+    mode: '0644'
+    owner: root
+    group: root
+  notify:
+    - Reload Nginx
+
+- name: Create directory for application log files
+  file:
+    state: directory
+    path: "{{ application_logs_path }}"
+    mode: '0755'
+    owner: "{{ nginx_user_name }}"
+    group: "{{ nginx_group_name }}"
+
+- name: Add the vhost for bricebentler.com
+  template:
+    src: vhost-bricebentler.com.conf.j2
+    dest: "{{ nginx_vhosts_path }}/bricebentler.com.conf"
+    mode: '0644'
+    owner: root
+    gorup: root
+  notify:
+    - Reload Nginx
