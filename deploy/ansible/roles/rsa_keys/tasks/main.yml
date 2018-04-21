@@ -1,0 +1,13 @@
+---
+- name: Load RSA key secrets
+  include_vars: secrets.yml
+
+- name: Copy nginx user RSA keys
+  copy:
+    dest: "{{ item.key }}"
+    content: "{{ item.value.content }}"
+    owner: "{{ nginx_user }}"
+    group: "{{ nginx_group }}"
+    mode: "{{ item.value.mode }}"
+  with_dict: "{{ rsa_keys_secrets }}"
+  no_log: true

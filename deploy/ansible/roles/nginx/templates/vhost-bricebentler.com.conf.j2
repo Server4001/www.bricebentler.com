@@ -3,7 +3,7 @@ upstream bricebentlerfpm {
     server unix:{{ php_fpm_bricebentler_socket_file }};
 }
 
-{% if pre_lets_encrypt not defined or pre_lets_encrypt != True %}
+{% if pre_lets_encrypt is not defined or pre_lets_encrypt != True %}
     # Redirect 80 to 443 (HTTP to HTTPS).
     server {
         listen 80;
@@ -39,7 +39,7 @@ server {
 
     root {{ bricebentler_docroot }};
 
-    {% if pre_lets_encrypt not defined or pre_lets_encrypt != True %}
+    {% if pre_lets_encrypt is not defined or pre_lets_encrypt != True %}
         add_header Strict-Transport-Security "max-age={{ nginx_hsts_max_age }}" always;
 
         ssl_certificate {{ lets_encrypt_certs_path }}/fullchain.pem;

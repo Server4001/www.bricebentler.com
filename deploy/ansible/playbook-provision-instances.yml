@@ -12,12 +12,13 @@
     - hostname
     - linux_user_ec2_user
     - linux_user_nginx
+    - postfix
+    - rsa_keys
     - { role: nginx, pre_lets_encrypt: True }
     - php
-    - lets_encrypt
-    - { role: nginx, pre_lets_encrypt: False }
     - composer
-    - postfix
+#    - lets_encrypt # TODO : Run this manually first.
+#    - { role: nginx, pre_lets_encrypt: False }
 
   handlers:
     - include: handlers/handlers.yml

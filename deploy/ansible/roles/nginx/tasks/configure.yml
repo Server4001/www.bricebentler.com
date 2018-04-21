@@ -23,6 +23,6 @@
     dest: "{{ nginx_vhosts_path }}/bricebentler.com.conf"
     mode: '0644'
     owner: root
-    gorup: root
+    group: root
   notify:
     - Reload Nginx
