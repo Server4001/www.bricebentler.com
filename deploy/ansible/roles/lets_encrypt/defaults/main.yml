@@ -3,7 +3,7 @@ lets_encrypt_certbot_url: 'https://dl.eff.org/certbot-auto'
 lets_encrypt_logs_path: '/var/log/letsencrypt'
 lets_encrypt_certbot_path: '/usr/bin/certbot-auto'
 lets_encrypt_certs_dirname: dev.nwfapco.com
-lets_encrypt_email_address: 'me@bricebentler.com'
+lets_encrypt_email_address: 'server4001@hotmail.com'
 lets_encrypt_domains_list:
   apex: 'bricebentler.com'
   www: 'www.bricebentler.com'
