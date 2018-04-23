@@ -1,4 +1,0 @@
----
-- include_vars: roles/php/fpm/defaults/main.yml
-
-php_package_names: "{{ php_packages|difference(['php71-fpm', 'php71-opcache']) }}"

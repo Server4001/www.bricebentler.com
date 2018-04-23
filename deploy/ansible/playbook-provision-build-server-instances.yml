@@ -14,7 +14,7 @@
     - linux_user_nginx
     - postfix
     - rsa_keys
-    - php/fpm # TODO : This tries to reload nginx. But it cant.
+    - php/cli
     - composer
     - bricebentler_com/git
 
