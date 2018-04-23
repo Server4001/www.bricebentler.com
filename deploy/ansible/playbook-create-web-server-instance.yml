@@ -5,4 +5,4 @@
   gather_facts: False
 
   roles:
-    - create_ec2_instance
+    - { role: create_ec2_instance, ec2_instance_type: 'web_server' }

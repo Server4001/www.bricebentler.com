@@ -1,7 +1,16 @@
 ---
+# Common for all instance types:
 ec2_instance_ami_id: 'ami-0b154221517123e4c'
-ec2_instance_sec_group_ids:
-  - 'sg-0a6689792e68841ff'
-ec2_instance_subnet_id: 'subnet-984be2ff'
 ec2_instance_root_snap_id: 'snap-0c46035e3fc6b0341'
 ec2_instance_dns_ttl: 300
+
+# Web server specific:
+ec2_instance_sec_group_ids_web_server:
+  - 'sg-0a6689792e68841ff'
+ec2_instance_subnet_id_web_server: 'subnet-984be2ff'
+
+# Build server specific:
+ec2_instance_sec_group_ids_build_server:
+  - 'sg-083ca5c336a6ee384'
+ec2_instance_subnet_id_build_server: 'subnet-7d9ab425'
+ec2_instance_iam_role_build_server: 'build-server'

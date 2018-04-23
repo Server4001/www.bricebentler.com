@@ -1,0 +1,8 @@
+---
+- name: Create a build server EC2 instance used to create bricebentler.com RPMs
+  hosts: loopback
+  connection: local
+  gather_facts: False
+
+  roles:
+    - { role: create_ec2_instance, ec2_instance_type: 'build_server' }

@@ -1,0 +1,22 @@
+---
+- name: Fully provision a build server EC2 instance from scratch
+  hosts: tag_Name_build_server
+  become: yes
+  become_method: sudo
+  gather_facts: yes
+  force_handlers: true
+  any_errors_fatal: true
+
+  roles:
+    - common
+    - { role: hostname, hostname_prefix: 'bricebentler-build' }
+    - linux_user_ec2_user
+    - linux_user_nginx
+    - postfix
+    - rsa_keys
+    - php
+    - composer
+    - bricebentler_com/git
+
+  handlers:
+    - include: handlers/handlers.yml

@@ -17,7 +17,8 @@
     - { role: nginx, pre_lets_encrypt: True }
     - php
     - composer
-#    - lets_encrypt # TODO : Run this manually first.
+    - bricebentler_com/deploy
+#    - lets_encrypt # TODO : Run this manually first. seeing issue: "ImportError: No module named cryptography.hazmat.bindings.openssl.binding"
 #    - { role: nginx, pre_lets_encrypt: False }
 
   handlers:
