@@ -20,3 +20,6 @@
 
   handlers:
     - include: handlers/handlers.yml
+
+  vars:
+    bricebentler_com_git_tag: '2018.04.23-00.44.45'

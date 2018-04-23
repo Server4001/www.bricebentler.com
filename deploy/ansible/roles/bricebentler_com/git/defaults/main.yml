@@ -1,0 +1,6 @@
+---
+bricebentler_com_git_repo: 'git@bitbucket.org:server4001/bricebentler.com-v3.git'
+
+bricebentler_com_sendgrid_api_key: "{{ _bricebentler_com_sendgrid_api_key }}"
+bricebentler_com_send_from_email: "{{ _bricebentler_com_send_from_email }}"
+bricebentler_com_send_to_email: "{{ _bricebentler_com_send_to_email }}"
