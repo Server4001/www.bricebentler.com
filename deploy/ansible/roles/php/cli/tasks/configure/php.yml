@@ -1,7 +1,7 @@
 ---
 - name: Configure the main php.ini file
   template:
-    src: roles/php/cli/templates/php.ini.j2
+    src: roles/php/fpm/templates/php.ini.j2
     dest: "{{ php_main_config_file }}"
     mode: 0644
     owner: root
