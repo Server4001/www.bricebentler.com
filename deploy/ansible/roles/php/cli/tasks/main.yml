@@ -5,6 +5,6 @@
   yum:
     name: "{{ item }}"
     state: present
-  with_items: "{{ php_packages|difference(['php71-fpm', 'php71-opcache']) }}"
+  with_items: "{{ php_package_names|difference(['php71-fpm', 'php71-opcache']) }}"
 
 - include: configure/php.yml
