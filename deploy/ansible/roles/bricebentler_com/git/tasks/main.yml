@@ -2,15 +2,12 @@
 - name: Include secrets for bricebentler.com app
   include_vars: secrets.yml
 
-#- name: Ensure the app root directory has correct permissions
-#  file:
-#    state: directory
-#    path: "{{ bricebentler_app_root }}"
-#    mode: '0755'
-#    owner: "{{ nginx_user_name }}"
-#    group: "{{ nginx_group_name }}"
+- name: Remove previous installation of bricebentler.com application
+  file:
+    state: absent
+    path: "{{ bricebentler_app_root }}"
 
-- name: Clone the application via git
+- name: Clone bricebentler.com via git
   git:
     repo: "{{ bricebentler_com_git_repo }}"
     dest: "{{ bricebentler_app_root }}"
@@ -20,7 +17,7 @@
     accept_hostkey: true
     key_file: "{{ rsa_keys_bitbucket_path }}"
 
-- name: Copy the catalog config file
+- name: Copy the env config file
   template:
     src: '.env.j2'
     dest: "{{ bricebentler_app_root }}/etc/.env"
@@ -28,15 +25,26 @@
     owner: "{{ nginx_user_name }}"
     group: "{{ nginx_group_name }}"
 
-- name: Install composer packages
+- name: Install composer packages for bricebentler.com
   composer:
     command: install
     working_dir: "{{ bricebentler_app_root }}"
     no_dev: yes
     optimize_autoloader: yes
-#  shell: "{{ composer_bin_path }} install --quiet --no-dev --optimize-autoloader"
-#  args:
-#    chdir: "{{ bricebentler_app_root }}"
+
+- name: Remove unnecessary directories from project
+  file:
+    state: absent
+    path: "{{ bricebentler_app_root }}/{{ item }}"
+  with_items:
+    - deploy
+    - etc/.env.local
+    - tests
+    - .gitignore
+    - composer.json
+    - phpunit.xml
+    - README.md
+    - Vagrantfile
 
 - name: Ensure the entire bricebentler.com application has correct permissions
   file:
