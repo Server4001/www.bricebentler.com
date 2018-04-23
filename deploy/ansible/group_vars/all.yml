@@ -15,4 +15,4 @@ nginx_home: '/var/lib/nginx'
 php_fpm_sockets_path: '/var/run/php-fpm'
 php_fpm_bricebentler_socket_file: "{{ php_fpm_sockets_path }}/bricebentler.socket"
 
-rsa_keys_bitbucket_path: "{{ nginx_host }}/.ssh/bitbucket"
+rsa_keys_bitbucket_path: "{{ nginx_home }}/.ssh/bitbucket"

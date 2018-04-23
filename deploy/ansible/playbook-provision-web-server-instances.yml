@@ -15,7 +15,7 @@
     - postfix
     - rsa_keys
     - { role: nginx, pre_lets_encrypt: True }
-    - php
+    - php/fpm
     - composer
     - bricebentler_com/deploy
 #    - lets_encrypt # TODO : Run this manually first. seeing issue: "ImportError: No module named cryptography.hazmat.bindings.openssl.binding"
