@@ -4,7 +4,7 @@
     state: present
     key_name: BricePersonalAWS
     instance_type: t2.nano
-    image: "{{ ec2_instance_ami_id }}"
+    image: "{{ ec2_instance_ami_id_web_server }}"
     wait: yes
     wait_timeout: 360
     group_id: "{{ ec2_instance_sec_group_ids_web_server }}"
@@ -17,7 +17,7 @@
       config_management: 'ansible'
     volumes:
       - device_name: /dev/xvda
-        snapshot: "{{ ec2_instance_root_snap_id }}"
+        snapshot: "{{ ec2_instance_root_snap_id_web_server }}"
         volume_type: gp2
         volume_size: 8
         delete_on_termination: true
