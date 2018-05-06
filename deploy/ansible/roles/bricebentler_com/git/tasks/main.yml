@@ -1,7 +1,4 @@
 ---
-- name: Include secrets for bricebentler.com app
-  include_vars: secrets.yml
-
 - name: Remove previous installation of bricebentler.com application
   file:
     state: absent
@@ -16,14 +13,6 @@
     version: "{{ bricebentler_com_git_tag }}"
     accept_hostkey: true
     key_file: "{{ rsa_keys_bitbucket_path }}"
-
-- name: Copy the env config file
-  template:
-    src: '.env.j2'
-    dest: "{{ bricebentler_app_root }}/etc/.env"
-    mode: 0640
-    owner: "{{ nginx_user_name }}"
-    group: "{{ nginx_group_name }}"
 
 - name: Install composer packages for bricebentler.com
   composer:

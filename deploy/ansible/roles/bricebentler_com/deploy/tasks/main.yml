@@ -1,0 +1,15 @@
+---
+- name: Include secrets for bricebentler.com app
+  include_vars: secrets.yml
+
+# TODO : Grab RPM from S3.
+
+# TODO : RPM install
+
+- name: Copy the env config file
+  template:
+    src: '.env.j2'
+    dest: "{{ bricebentler_app_root }}/etc/.env"
+    mode: 0640
+    owner: "{{ nginx_user_name }}"
+    group: "{{ nginx_group_name }}"

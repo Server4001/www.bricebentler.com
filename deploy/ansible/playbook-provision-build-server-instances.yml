@@ -8,6 +8,7 @@
   any_errors_fatal: true
 
   roles:
+    - bricebentler_com/s3_pre_existing_rpm
     - common
     - { role: hostname, hostname_prefix: 'bricebentler-build' }
     - linux_user_ec2_user

@@ -1,0 +1,4 @@
+---
+create_rpm_s3_bucket: 'bricebentler-db-dumps'
+create_rpm_builds_s3_path: '/bricebentler_com_rpms'
+create_rpm_file_name: "{{ bricebentler_com_git_tag }}.rpm"

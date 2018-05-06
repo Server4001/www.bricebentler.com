@@ -1,0 +1,18 @@
+---
+# Ansible doesn't have a nice way to list a single object on S3.
+# So download to /dev/null. If successful, file already exists, so fail.
+- name: Check if RPM already exists on S3
+  aws_s3:
+    bucket: "{{ create_rpm_s3_bucket }}"
+    object: "{{ create_rpm_builds_s3_path }}/{{ create_rpm_file_name }}"
+    dest: '/dev/null'
+    mode: 'get'
+  delegate_to: 127.0.0.1
+  become: no
+  register: create_rpm_s3_list_output
+  ignore_errors: True
+
+- name: Fail if RPM file name already exists on S3
+  fail:
+    msg: "Current build filename already exist on S3 at: s3://{{ create_rpm_s3_bucket }}{{ create_rpm_builds_s3_path }}/{{ create_rpm_file_name }}"
+  when: "create_rpm_s3_list_output.failed == False"
