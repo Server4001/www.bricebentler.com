@@ -6,4 +6,4 @@ nginx_error_log: "{{ nginx_logs_path }}/error.log"
 nginx_vhosts_path: "{{ nginx_configs_path }}/conf.d"
 nginx_worker_connections: 1024
 nginx_client_max_body_size_bricebentler: '8M'
-nginx_hsts_max_age: 60 # In seconds.
+nginx_hsts_max_age: 60 # In seconds. TODO : Bump this incrementally to 31536000.

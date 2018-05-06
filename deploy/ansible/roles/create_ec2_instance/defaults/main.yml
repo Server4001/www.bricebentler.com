@@ -1,6 +1,6 @@
 ---
 # Common for all instance types:
-ec2_instance_dns_ttl: 300
+ec2_instance_dns_ttl: 300 # TODO : Increase this.
 
 # Web server specific:
 ec2_instance_ami_id_web_server: 'ami-0b154221517123e4c'
