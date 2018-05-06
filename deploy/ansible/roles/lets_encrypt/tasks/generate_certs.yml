@@ -20,8 +20,8 @@
     --webroot
     --debug
     --non-interactive
-  register: lets_encrypt_certbot_output
   when: lets_encrypt_generate_certs
+  notify: Reload Nginx
 
 - name: Delete the well known directory
   file:

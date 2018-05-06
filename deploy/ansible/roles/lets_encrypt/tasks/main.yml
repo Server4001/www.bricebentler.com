@@ -2,6 +2,3 @@
 - include: install.yml
 
 - include: generate_certs.yml
-
-- include: reload_nginx.yml
-  when: lets_encrypt_certbot_output is defined
