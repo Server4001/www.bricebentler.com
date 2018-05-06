@@ -17,6 +17,7 @@
     - php/cli
     - composer
     - bricebentler_com/git
+    - bricebentler_com/create_rpm
 
   handlers:
     - include: handlers/handlers.yml

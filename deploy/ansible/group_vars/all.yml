@@ -1,7 +1,9 @@
 ---
 application_logs_path: '/var/log/www'
 
-bricebentler_app_root: '/var/www/html'
+bricebentler_parent_dir_path: '/var/www'
+bricebentler_dir_name: 'html'
+bricebentler_app_root: "{{ bricebentler_parent_dir_path }}/{{ bricebentler_dir_name }}"
 bricebentler_docroot: "{{ bricebentler_app_root }}/docroot"
 
 composer_bin_path: '/usr/bin/composer'

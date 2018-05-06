@@ -1,0 +1,5 @@
+---
+- name: Create a bricebentler.com RPM package
+  command: "{{ create_rpm_fpm_path }} --verbose -s dir -t rpm --rpm-use-file-permissions --rpm-user {{ nginx_user_name }} --rpm-group {{ nginx_group_name }} --description {{ bricebentler_com_git_tag }} -n {{ create_rpm_package_name }} -v {{ bricebentler_com_git_tag }} --directories {{ bricebentler_dir_name }} --prefix {{ bricebentler_parent_dir_path }} -a noarch {{ bricebentler_dir_name }}"
+  args:
+    chdir: "{{ bricebentler_parent_dir_path }}/"
