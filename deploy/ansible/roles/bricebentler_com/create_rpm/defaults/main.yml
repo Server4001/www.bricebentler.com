@@ -1,3 +1,4 @@
 ---
 create_rpm_fpm_path: '/usr/bin/fpm'
 create_rpm_package_name: 'bricebentler'
+create_rpm_temp_path: "/tmp/{{ rpm_file_name }}"
