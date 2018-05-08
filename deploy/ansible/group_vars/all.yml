@@ -1,6 +1,7 @@
 ---
 application_logs_path: '/var/log/www'
 
+bricebentler_com_git_tag: '2018.04.23-00.44.45'
 bricebentler_parent_dir_path: '/var/www'
 bricebentler_dir_name: 'html'
 bricebentler_app_root: "{{ bricebentler_parent_dir_path }}/{{ bricebentler_dir_name }}"
