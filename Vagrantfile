@@ -4,8 +4,10 @@
 VAGRANTFILE_API_VERSION = "2"
 
 $bricebentler_com_script = <<SCRIPT
+rpm -Uvh https://rpm.nodesource.com/pub_8.x/el/6/x86_64/nodesource-release-el6-1.noarch.rpm
+yum install -y nodejs-8.10.0
 rm -rf /var/www/html
-ln -fs /vagrant/docroot /var/www/html
+ln -fs /vagrant/s3 /var/www/html
 chmod 0777 /var/log/nginx
 SCRIPT
 
