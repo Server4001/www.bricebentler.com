@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# TODO : Add dry run flag.
+
+CURRENT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CONFIG_PATH="${CURRENT_DIR_PATH}/config/secrets.sh"
+
+if [ ! -f "${CONFIG_PATH}" ]; then
+  >&2 echo "Cannot find config file at: ${CONFIG_PATH}"
+  exit 1
+fi
+
+# Exports the S3_BUCKET and S3_PROFILE variables.
+source "${CONFIG_PATH}"
+
+aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" --only-show-errors --profile "${S3_PROFILE}"
