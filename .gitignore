@@ -1,8 +1,4 @@
 /.idea
 /.vagrant
-/vendor
-/etc/.env
-/tests/coverage
-/deploy/ansible/scripts/ansible_vault
-/deploy/ansible/scripts/aws_cli_creds
-/deploy/ansible/*.retry
+/etc/config.json
+/scripts/config/secrets.sh
