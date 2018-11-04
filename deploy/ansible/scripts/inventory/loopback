@@ -1,2 +1,0 @@
-[loopback]
-localhost ansible_user=vagrant

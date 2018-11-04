@@ -1,9 +1,0 @@
-#!/bin/bash
-# {{ ansible_managed }}
-WEB_ROOT={{ bricebentler_docroot }}
-RANDOM_NAME=`head /dev/urandom | tr -dc A-Za-z0-9 | head -c 13`
-
-echo '<?php opcache_reset(); ?>' > "${WEB_ROOT}/${RANDOM_NAME}.php"
-
-curl -i http://localhost/${RANDOM_NAME}.php
-rm "${WEB_ROOT}/${RANDOM_NAME}.php"
