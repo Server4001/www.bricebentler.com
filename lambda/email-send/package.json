@@ -1,0 +1,27 @@
+{
+  "name": "email-send",
+  "version": "0.1.0",
+  "description": "AWS Lambda function for sending emails via the bricebentler.com contact form",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha tests/**/*.js",
+    "test:coverage": "istanbul cover _mocha -- -R tap \"./tests/**/*.js\" > ./test.tap && istanbul report clover",
+    "build": "mkdir build && zip -r ./build/email-send-$(date +%s).zip . -x \"*config.json.local*\" -x \"*build*\" -x \"*tests*\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/server4001/bricebentler.com-v3.git"
+  },
+  "author": "Brice Bentler <me@bricebentler.com>",
+  "license": "MIT",
+  "homepage": "https://bitbucket.org/server4001/bricebentler.com-v3#readme",
+  "devDependencies": {
+    "chai": "^4.2.0",
+    "istanbul": "^0.4.5",
+    "lambda-local": "^1.5.1",
+    "mocha": "^5.2.0"
+  },
+  "dependencies": {
+    "mustache": "^3.0.0"
+  }
+}

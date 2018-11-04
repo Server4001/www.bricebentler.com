@@ -1,4 +1,5 @@
 /.idea
 /.vagrant
-/etc/config.json
 /scripts/config/secrets.sh
+/lambda/*/etc/config.json
+/lambda/*/node_modules
