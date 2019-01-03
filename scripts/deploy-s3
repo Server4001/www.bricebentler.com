@@ -36,9 +36,11 @@ fi
 source "${CONFIG_PATH}"
 
 if [[ ${DRYRUN} ]]; then
-  FLAGS="--dryrun --profile ${S3_PROFILE}"
+  FLAGS='--dryrun'
 else
-  FLAGS="--only-show-errors --profile ${S3_PROFILE}"
+  FLAGS='--only-show-errors'
 fi
 
-aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" "${FLAGS}"
+aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" "${FLAGS}" --profile "${S3_PROFILE}"
+
+exit $?
