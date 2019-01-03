@@ -1,4 +1,13 @@
 #!/bin/bash
+# Deploys the static website files to S3.
+#
+# @category     Scripts
+# @package      Bricebentler.com
+# @copyright    Copyright (c) 2019 Bentler Design (www.bricebentler.com)
+# @author       Brice Bentler <me(at)bricebentler(dot)com>
+
+# Let non-zero exit codes kill the script, even in a pipe.
+set -eo pipefail
 
 function usage {
   echo "Usage:"
@@ -42,5 +51,3 @@ else
 fi
 
 aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" "${FLAGS}" --profile "${S3_PROFILE}"
-
-exit $?
