@@ -1,6 +1,28 @@
 #!/bin/bash
 
-# TODO : Add dry run flag.
+function usage {
+  echo "Usage:"
+  echo "  ./$(basename "${0}") [options]"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help - Print this help message."
+  echo "  -d, --dryrun - Don't actually deploy anything. Only show what files would have been deployed."
+}
+
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)   usage
+                 exit 0
+                 ;;
+    -d|--dryrun) DRYRUN=true
+                 shift
+                 ;;
+    *)           >&2 echo -e "\nERROR: Invalid argument: '${1}'"
+                 usage
+                 exit 1
+                 ;;
+  esac
+done
 
 CURRENT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CONFIG_PATH="${CURRENT_DIR_PATH}/config/secrets.sh"
@@ -13,4 +35,10 @@ fi
 # Exports the S3_BUCKET and S3_PROFILE variables.
 source "${CONFIG_PATH}"
 
-aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" --only-show-errors --profile "${S3_PROFILE}"
+if [[ ${DRYRUN} ]]; then
+  FLAGS="--dryrun --profile ${S3_PROFILE}"
+else
+  FLAGS="--only-show-errors --profile ${S3_PROFILE}"
+fi
+
+aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" "${FLAGS}"
