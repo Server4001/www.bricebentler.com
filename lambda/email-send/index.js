@@ -9,11 +9,12 @@ const mustache = require('mustache');
 const emailSubject = 'Bricebentler.com Email Contact Form Entry';
 
 // Helper functions.
-const debugAndCallbackNull = (exitMessage, exitVariable, exitCallback) => {
-    console.log(exitMessage);
-    console.log(util.inspect(exitVariable, {showHidden: true, depth: null}));
+const debugLog = (logVariable, logMessage = null) => {
+    if (logMessage !== null) {
+        console.log(logMessage);
+    }
 
-    exitCallback(null);
+    console.log(util.inspect(logVariable, {showHidden: true, depth: null}));
 };
 
 const loadConfig = () => {
@@ -26,34 +27,18 @@ const loadConfig = () => {
     return JSON.parse(fs.readFileSync(configFile, 'utf8'));
 };
 
-const callSendgrid = (postBody, config, lambdaCallback) => {
-
-    // TODO : Change this to a single exception with all data, and move to a helper function.
-    if (config.sendgrid_api_key === undefined) {
-        throw Error('Missing sendgrid api key in config');
-    }
-    if (config.sendgrid_to_email === undefined) {
-        throw Error('Missing sendgrid to email in config');
-    }
-    if (config.sendgrid_to_name === undefined) {
-        throw Error('Missing sendgrid to name in config');
-    }
-    if (config.sendgrid_from_email === undefined) {
-        throw Error('Missing sendgrid from email in config');
-    }
-    if (config.sendgrid_from_name === undefined) {
-        throw Error('Missing sendgrid from name in config');
-    }
+const callSendgrid = (templateData, config) => {
 
     const apiKey = config.sendgrid_api_key;
     const emailTemplate = fs.readFileSync(path.join(__dirname, '/views/email.html'), 'utf8');
-    // TODO : Confirm the postBody fields work.
+    // TODO : Confirm the templateData fields work.
     const emailHtml = mustache.render(emailTemplate, {
-        email_address: postBody.email_address,
-        name: postBody.name,
-        phone: postBody.phone,
-        message: postBody.message,
-        date: postBody.date,
+        email_address: templateData.email,
+        name: templateData.name,
+        phone: templateData.phone,
+        message: templateData.message,
+        date: new Date().toString(),
+        ip_address: templateData.ip_address,
     });
 
     const postData = JSON.stringify({
@@ -96,70 +81,90 @@ const callSendgrid = (postBody, config, lambdaCallback) => {
     // Send POST request to SendGrid.
     postReq.write(postData);
     postReq.end();
-
-    lambdaCallback(null);
 };
 
 // Handler function called by AWS Lambda.
-exports.handler = (event, context, callback) => {
+exports.handler = async (event) => {
     let config;
 
     try {
         config = loadConfig();
     } catch (e) {
-        debugAndCallbackNull(e.message, e, callback);
-        return;
+        debugLog(e);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing/invalid config.'}),
+        }; // TODO : Consolidate.
+    }
+
+    let configValidationErrors = [];
+    ['sendgrid_api_key', 'sendgrid_to_email', 'sendgrid_to_name', 'sendgrid_from_email',
+        'sendgrid_from_name'].forEach((item) => {
+        if (config[item] === undefined) {
+            configValidationErrors.push(`Missing ${item} in config file`);
+        }
+    });
+
+    if (configValidationErrors.length > 0) {
+        debugLog(configValidationErrors, 'Missing the following config values:');
+        return {
+            statusCode: 500,
+            body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing config values.'}),
+        }; // TODO : Consolidate.
     }
 
     // Validate event payload.
-    //noinspection JSUnresolvedVariable
-    if (event === undefined ||
-        event.Records === undefined ||
-        event.Records[0] === undefined ||
-        event.Records[0].Sns === undefined ||
-        event.Records[0].Sns.Message === undefined) {
-
-        debugAndCallbackNull('Invalid event payload. Now dumping event object', event, callback);
-        return;
+    if (event === undefined || event.body === undefined) {
+        debugLog(event, 'Invalid event payload.');
+        return {
+            statusCode: 500,
+            body: JSON.stringify({status: 'error', message: 'Failed to send email due to invalid event object.'}),
+        }; // TODO : Consolidate.
     }
 
-    // Message property exists as a JSON encoded string.
-    //noinspection JSUnresolvedVariable
-    const message = JSON.parse(event.Records[0].Sns.Message);
-    const messageDataType = typeof message;
+    const requestBody = JSON.parse(event.body);
 
-    if (messageDataType !== 'object') {
-        debugAndCallbackNull(
-            `Invalid Sns.Message payload, expected an object, got '${messageDataType}'. Now dumping message variable.`,
-            message,
-            callback);
+    // Validate request payload.
+    let validationErrors = [];
+    ['name', 'phone', 'email', 'message'].forEach((item) => {
+        if (requestBody[item] === undefined) {
+            validationErrors.push(`Missing ${item} in request body`);
+        }
+    });
 
-        return;
+    if (validationErrors.length > 0) {
+        debugLog(requestBody, 'Invalid request body.');
+        return {
+            statusCode: 400,
+            body: JSON.stringify({status: 'fail', data: {errors: validationErrors}}),
+        }; // TODO : Consolidate.
     }
 
-    const messageObjectKeys = Object.keys(message);
-
-    if (messageObjectKeys.length < 1) {
-        debugAndCallbackNull(
-            'Invalid Sns.Message payload, no keys in the object. Now dumping message object (should be empty).',
-            message,
-            callback);
-
-        return;
+    let sourceIp;
+    if (event.requestContext !== undefined &&
+        event.requestContext.identity !== undefined &&
+        event.requestContext.identity.sourceIp !== undefined) {
+        sourceIp = event.requestContext.identity.sourceIp;
     }
 
-    const messageFirstKey = messageObjectKeys[0];
+    try {
+        callSendgrid({
+            name: requestBody.name,
+            phone: requestBody.phone,
+            email: requestBody.email,
+            message: requestBody.message,
+            ip_address: sourceIp
+        }, config);
 
-    // Cloudwatch Alarm.
-    // Validate message payload.
-    //noinspection JSUnresolvedVariable
-    if (message.AlarmName === undefined || message.AlarmDescription === undefined ||
-        message.NewStateValue === undefined || message.NewStateReason === undefined) {
-
-        debugAndCallbackNull('Invalid Sns.Message payload. Now dumping message object.', message, callback);
-        return;
+        return {
+            statusCode: 200,
+            body: JSON.stringify({status: 'success'}),
+        }; // TODO : Consolidate.
+    } catch (e) {
+        debugLog(e);
+        return {
+            statusCode: 500,
+            body: JSON.stringify({status: 'error', message: 'Failed to send email.'}),
+        }; // TODO : Consolidate.
     }
-
-    //noinspection JSUnresolvedVariable
-    callSendgrid(postBody, config, callback);
 };

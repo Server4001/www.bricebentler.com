@@ -45,7 +45,7 @@ fi
 source "${CONFIG_PATH}"
 
 if [[ ${DRYRUN} ]]; then
-  FLAGS='--dryrun'
+  FLAGS='--dry-run'
 else
   FLAGS='--publish'
 fi
@@ -58,8 +58,22 @@ artifact_file_path="${CURRENT_DIR_PATH}/../lambda/email-send/build/${artifact_fi
 
 # TODO : Save the build to S3.
 
+# TODO : Make --region dynamic.
+# Deploy the artifact to lambda.
 echo "DEPLOYING ARTIFACT TO LAMBDA..."
-aws lambda update-function-code \
+lambda_response=$(aws lambda update-function-code \
   --function-name "${LAMBDA_FUNC_NAME}" \
   --zip-file "fileb://${artifact_file_path}" \
-  ${FLAGS}
+  --region us-east-1 \
+  ${FLAGS})
+
+if [[ ${DRYRUN} ]]; then
+  echo "${lambda_response}"
+  exit 0
+fi
+
+# Get the ARN for the new version.
+lambda_version_arn=$(echo "${lambda_response}" | python -c "import sys, json; print json.load(sys.stdin)['FunctionArn']")
+
+# TODO : Update cloudfront.
+echo "${lambda_version_arn}"
