@@ -84,6 +84,7 @@ const callSendgrid = (templateData, config, callback) => {
 
     callback(null, {
         statusCode: 200,
+        headers: { 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({status: 'success'}),
     }); // TODO : Consolidate.
 };
@@ -92,12 +93,14 @@ const callSendgrid = (templateData, config, callback) => {
 exports.handler = async (event, context, callback) => {
     let config;
 
+    // TODO : Switch from config file to ENV vars.
     try {
         config = loadConfig();
     } catch (e) {
         debugLog(e);
         callback(null, {
             statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing/invalid config.'}),
         }); // TODO : Consolidate.
     }
@@ -114,6 +117,7 @@ exports.handler = async (event, context, callback) => {
         debugLog(configValidationErrors, 'Missing the following config values:');
         callback(null, {
             statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing config values.'}),
         }); // TODO : Consolidate.
     }
@@ -123,6 +127,7 @@ exports.handler = async (event, context, callback) => {
         debugLog(event, 'Invalid event payload.');
         callback(null, {
             statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({status: 'error', message: 'Failed to send email due to invalid event object.'}),
         }); // TODO : Consolidate.
     }
@@ -141,6 +146,7 @@ exports.handler = async (event, context, callback) => {
         debugLog(requestBody, 'Invalid request body.');
         callback(null, {
             statusCode: 400,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({status: 'fail', data: {errors: validationErrors}}),
         }); // TODO : Consolidate.
     }
@@ -164,6 +170,7 @@ exports.handler = async (event, context, callback) => {
         debugLog(e);
         callback(null, {
             statusCode: 500,
+            headers: { 'Access-Control-Allow-Origin': '*' },
             body: JSON.stringify({status: 'error', message: 'Failed to send email.'}),
         }); // TODO : Consolidate.
     }

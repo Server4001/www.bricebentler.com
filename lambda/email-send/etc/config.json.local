@@ -1,5 +1,4 @@
 {
-    "use_google_analytics": false,
     "sendgrid_api_key": "some.api.key",
     "sendgrid_from_email": "foo@bar.com",
     "sendgrid_from_name": "Some Person",
