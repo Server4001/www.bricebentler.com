@@ -1,8 +1,0 @@
----
-- name: Create hostname prefix fact if not set
-  set_fact: hostname_prefix='bricebentler-com'
-  when: hostname_prefix is not defined
-
-- name: Set the hostname
-  hostname:
-    name: "{{ hostname_prefix|replace(' ', '-') }}-{{ hostvars[inventory_hostname]['ec2_ip_address']|replace('.', '-') }}"

@@ -1,8 +1,0 @@
----
-- name: Create a bricebentler.com EC2 instance
-  hosts: loopback
-  connection: local
-  gather_facts: False
-
-  roles:
-    - { role: create_ec2_instance, ec2_instance_type: 'web_server' }

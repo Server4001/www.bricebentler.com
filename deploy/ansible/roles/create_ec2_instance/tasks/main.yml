@@ -1,7 +1,0 @@
----
-- name: Confirm EC2 instance type is valid
-  fail:
-    msg: "Undefined/invalid EC2 instance type: {{ ec2_instance_type }}"
-  when: ec2_instance_type is not defined or ec2_instance_type|lower not in ['build_server', 'web_server']
-
-- include: "types/{{ ec2_instance_type }}.yml"

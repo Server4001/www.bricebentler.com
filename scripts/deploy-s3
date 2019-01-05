@@ -1,0 +1,53 @@
+#!/bin/bash
+# Deploys the static website files to S3.
+#
+# @category     Scripts
+# @package      Bricebentler.com
+# @copyright    Copyright (c) 2019 Bentler Design (www.bricebentler.com)
+# @author       Brice Bentler <me(at)bricebentler(dot)com>
+
+# Let non-zero exit codes kill the script, even in a pipe.
+set -eo pipefail
+
+function usage {
+  echo "Usage:"
+  echo "  ./$(basename "${0}") [options]"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help - Print this help message."
+  echo "  -d, --dryrun - Don't actually deploy anything. Only show what files would have been deployed."
+}
+
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)   usage
+                 exit 0
+                 ;;
+    -d|--dryrun) DRYRUN=true
+                 shift
+                 ;;
+    *)           >&2 echo -e "\nERROR: Invalid argument: '${1}'"
+                 usage
+                 exit 1
+                 ;;
+  esac
+done
+
+CURRENT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CONFIG_PATH="${CURRENT_DIR_PATH}/config/secrets.sh"
+
+if [ ! -f "${CONFIG_PATH}" ]; then
+  >&2 echo "Cannot find config file at: ${CONFIG_PATH}"
+  exit 1
+fi
+
+# Exports the S3_BUCKET and S3_PROFILE variables.
+source "${CONFIG_PATH}"
+
+if [[ ${DRYRUN} ]]; then
+  FLAGS='--dryrun'
+else
+  FLAGS='--only-show-errors'
+fi
+
+aws s3 sync "${CURRENT_DIR_PATH}/../s3/" "s3://${S3_BUCKET}/" "${FLAGS}" --profile "${S3_PROFILE}"
