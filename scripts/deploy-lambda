@@ -16,6 +16,7 @@ function usage {
   echo "Options:"
   echo "  -h, --help - Print this help message."
   echo "  -d, --dryrun - Don't actually deploy anything. Only show what would have happened."
+  echo "  -r REGION, --region=REGION - The AWS region to use. Defaults to 'us-east-1'."
 }
 
 while test $# -gt 0; do
@@ -26,6 +27,18 @@ while test $# -gt 0; do
     -d|--dryrun) DRYRUN=true
                  shift
                  ;;
+    -r)          shift
+                 if test $# -gt 0; then
+                   REGION_ARG=${1}
+                 else
+                   >&2 echo -e "\nNo region specified on -r flag"
+                   exit 1
+                 fi
+                 shift
+                 ;;
+    --region*)   export REGION_ARG=$(echo ${1} | sed -e 's/^[^=]*=//g')
+                 shift
+                 ;;
     *)           >&2 echo -e "\nERROR: Invalid argument: '${1}'"
                  usage
                  exit 1
@@ -33,6 +46,7 @@ while test $# -gt 0; do
   esac
 done
 
+REGION="${REGION_ARG:-us-east-1}"
 CURRENT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 CONFIG_PATH="${CURRENT_DIR_PATH}/config/secrets.sh"
 
@@ -58,13 +72,12 @@ artifact_file_path="${CURRENT_DIR_PATH}/../lambda/email-send/build/${artifact_fi
 
 # TODO : Save the build to S3.
 
-# TODO : Make --region dynamic.
 # Deploy the artifact to lambda.
 echo "DEPLOYING ARTIFACT TO LAMBDA..."
 lambda_response=$(aws lambda update-function-code \
   --function-name "${LAMBDA_FUNC_NAME}" \
   --zip-file "fileb://${artifact_file_path}" \
-  --region us-east-1 \
+  --region "${REGION}" \
   ${FLAGS})
 
 if [[ ${DRYRUN} ]]; then
@@ -75,5 +88,4 @@ fi
 # Get the ARN for the new version.
 lambda_version_arn=$(echo "${lambda_response}" | python -c "import sys, json; print json.load(sys.stdin)['FunctionArn']")
 
-# TODO : Update cloudfront.
-echo "${lambda_version_arn}"
+echo "NEW LAMBDA ARN: ${lambda_version_arn}"
