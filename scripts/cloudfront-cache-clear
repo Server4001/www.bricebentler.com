@@ -1,0 +1,60 @@
+#!/bin/bash
+# Clears the cloudfront cache by creating a new invalidation.
+#
+# @category     Scripts
+# @package      Bricebentler.com
+# @copyright    Copyright (c) 2019 Bentler Design (www.bricebentler.com)
+# @author       Brice Bentler <me(at)bricebentler(dot)com>
+
+# Let non-zero exit codes kill the script, even in a pipe.
+set -eo pipefail
+
+function usage {
+  echo "Usage:"
+  echo "  ./$(basename "${0}") [options]"
+  echo ""
+  echo "Options:"
+  echo "  -h, --help - Print this help message."
+  echo "  -p PATH, --path=PATH - The path to create an invalidation for. Defaults to '/*'."
+}
+
+while test $# -gt 0; do
+  case "$1" in
+    -h|--help)   usage
+                 exit 0
+                 ;;
+    -p)          shift
+                 if test $# -gt 0; then
+                   CFRONT_PATH_ARG=${1}
+                 else
+                   >&2 echo -e "\nNo path specified on -p flag"
+                   exit 1
+                 fi
+                 shift
+                 ;;
+    --path*)     export CFRONT_PATH_ARG=$(echo ${1} | sed -e 's/^[^=]*=//g')
+                 shift
+                 ;;
+    *)           >&2 echo -e "\nERROR: Invalid argument: '${1}'"
+                 usage
+                 exit 1
+                 ;;
+  esac
+done
+
+CFRONT_PATH="${CFRONT_PATH_ARG:-/*}"
+CURRENT_DIR_PATH="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+CONFIG_PATH="${CURRENT_DIR_PATH}/config/secrets.sh"
+
+if [ ! -f "${CONFIG_PATH}" ]; then
+  >&2 echo "Cannot find config file at: ${CONFIG_PATH}"
+  exit 1
+fi
+
+# Exports the CLOUDFRONT_DIST_ID, CLOUDFRONT_PROFILE variables.
+source "${CONFIG_PATH}"
+
+aws cloudfront create-invalidation \
+  --distribution-id "${CLOUDFRONT_DIST_ID}" \
+  --paths "${CFRONT_PATH}" \
+  --profile "${CLOUDFRONT_PROFILE}"
