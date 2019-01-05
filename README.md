@@ -11,12 +11,14 @@ This project contains 3 main directories:
 * scripts
     * Scripts used for deploying the static website to S3 and the Lambda function to Lambda.
 
-### Setting up the bricebentler.loc local environment
+### Setting up
 
 * vagrant up bricebentler_com
 * Go to `192.168.35.11` in your browser
 * You can ssh into the vagrant environment with: `vagrant ssh bricebentler_com`
 * Log files are at: `/var/log/nginx`
+* Copy `./lambda/email-send/etc/config.json.local` to `./lambda/email-send/etc/config.json` and replace with actual values.
+* Copy `./scripts/config/secrets.sh.example` to `./scripts/config/secrets.sh` and replace with actual values.
 
 ### Testing the lambda function
 
@@ -37,3 +39,8 @@ This project contains 3 main directories:
 * First, copy `./scripts/config/secrets.sh.example` to `./scripts/config/secrets.sh` and replace the contents with actual values.
 * Deploy to lambda: `./scripts/deploy-lambda -h`
 * Deploy to S3: `./scripts/deploy-s3 -h`
+
+### TODO
+
+* Document process for setting up S3, CloudFront, Lambda, IAM users, IAM roles.
+* Move initial setup into infra as code (terraform/cloudformation or similar).
