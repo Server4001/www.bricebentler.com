@@ -9,7 +9,7 @@ const jsend = require('./lib/helpers/jsend');
 
 const emailSubject = 'Bricebentler.com Email Contact Form Entry';
 
-// Helper functions.
+// Helper functions. TODO : Move these to lib/helpers.
 const debugLog = (logVariable, logMessage = null) => {
     if (logMessage !== null) {
         console.log(logMessage);
