@@ -1,30 +1,39 @@
 # bricebentler.com
 
-## My website.
+### Overview
+
+This project contains 3 main directories:
+
+* s3
+    * This contains the static assets for my website hosted on AWS S3.
+* lambda/email-send
+    * This contains the AWS lambda function called by the contact form on my website.
+* scripts
+    * Scripts used for deploying the static website to S3 and the Lambda function to Lambda.
 
 ### Setting up the bricebentler.loc local environment
 
 * vagrant up bricebentler_com
-* Go to `bricebentler.loc` in your browser
+* Go to `192.168.35.11` in your browser
 * You can ssh into the vagrant environment with: `vagrant ssh bricebentler_com`
-* Log files are at: `/var/log/nginx/www.log`
+* Log files are at: `/var/log/nginx`
 
-### Setting up the deploy environment
+### Testing the lambda function
 
-* Copy the vault password to the following file: `./deploy/ansible/scripts/ansible_vault`
-* This file should look like the following:
-```bash
-#!/bin/bash
-echo 'this-is-soooo-secret-its-not-even-funny'
-```
-* Copy the AWS CLI creds to the following file: `./deploy/ansible/scripts/aws_cli_creds`
-* This file should look like the following:
-```
-aws_access_key:aws_secret_key
-```
-* Run: `vagrant up deploy`
-* Run: `vagrant ssh deploy`
-* Run: `cd /vagrant/deploy/ansible/`
-* Create a new EC2 instance with: `ansible-playbook playbook-create-instance.yml`
-* Provision all instances with: `ansible-playbook playbook-provision-instances.yml`
-* Deploy bricebentler.com (no other provisioning) with: `ansible-playbook playbook-deploy.yml`
+* The lambda function can be run on your local machine by:
+    * SSHing into the vagrant environment: `vagrant ssh bricebentler_com`
+    * Going into the root of the lambda function directory: `cd /vagrant/lambda/email-send`
+    * Ensuring you have the NPM packages installed: `npm install`
+    * Running the test:lambda command: `npm run test:lambda`
+    * Note that you will need to have copied the config file at `etc/config.json` prior to running ths command.
+* Unit tests can be run on your local machine by:
+    * SSHing into the vagrant environment: `vagrant ssh bricebentler_com`
+    * Going into the root of the lambda function directory: `cd /vagrant/lambda/email-send`
+    * Ensuring you have the NPM packages installed: `npm install`
+    * Running the test command: `npm test`
+
+### Deploy Scripts
+
+* First, copy `./scripts/config/secrets.sh.example` to `./scripts/config/secrets.sh` and replace the contents with actual values.
+* Deploy to lambda: `./scripts/deploy-lambda -h`
+* Deploy to S3: `./scripts/deploy-s3 -h`

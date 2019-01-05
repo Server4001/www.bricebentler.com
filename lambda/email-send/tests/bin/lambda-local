@@ -1,0 +1,25 @@
+#!/usr/bin/env node
+'use strict';
+
+const path = require('path');
+const lambdaLocal = require('lambda-local');
+
+lambdaLocal.execute({
+    region: 'us-east-1',
+    event: {
+        body: JSON.stringify({
+            name: 'My Name',
+            phone: '206-321-0987',
+            email: 'my@name.com',
+            message: 'Please contact me.',
+        }),
+        requestContext: {
+            identity: {
+                sourceIp: '54.12.11.10',
+            },
+        },
+    },
+    lambdaHandler: 'handler',
+    lambdaPath: path.join(__dirname, '../../', 'index.js'),
+    timeoutMs: 3000,
+});
