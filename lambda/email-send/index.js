@@ -27,7 +27,7 @@ const loadConfig = () => {
     return JSON.parse(fs.readFileSync(configFile, 'utf8'));
 };
 
-const callSendgrid = (templateData, config) => {
+const callSendgrid = (templateData, config, callback) => {
 
     const apiKey = config.sendgrid_api_key;
     const emailTemplate = fs.readFileSync(path.join(__dirname, '/views/email.html'), 'utf8');
@@ -81,20 +81,25 @@ const callSendgrid = (templateData, config) => {
     // Send POST request to SendGrid.
     postReq.write(postData);
     postReq.end();
+
+    callback(null, {
+        statusCode: 200,
+        body: JSON.stringify({status: 'success'}),
+    }); // TODO : Consolidate.
 };
 
 // Handler function called by AWS Lambda.
-exports.handler = async (event) => {
+exports.handler = async (event, context, callback) => {
     let config;
 
     try {
         config = loadConfig();
     } catch (e) {
         debugLog(e);
-        return {
+        callback(null, {
             statusCode: 500,
             body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing/invalid config.'}),
-        }; // TODO : Consolidate.
+        }); // TODO : Consolidate.
     }
 
     let configValidationErrors = [];
@@ -107,19 +112,19 @@ exports.handler = async (event) => {
 
     if (configValidationErrors.length > 0) {
         debugLog(configValidationErrors, 'Missing the following config values:');
-        return {
+        callback(null, {
             statusCode: 500,
             body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing config values.'}),
-        }; // TODO : Consolidate.
+        }); // TODO : Consolidate.
     }
 
     // Validate event payload.
     if (event === undefined || event.body === undefined) {
         debugLog(event, 'Invalid event payload.');
-        return {
+        callback(null, {
             statusCode: 500,
             body: JSON.stringify({status: 'error', message: 'Failed to send email due to invalid event object.'}),
-        }; // TODO : Consolidate.
+        }); // TODO : Consolidate.
     }
 
     const requestBody = JSON.parse(event.body);
@@ -134,10 +139,10 @@ exports.handler = async (event) => {
 
     if (validationErrors.length > 0) {
         debugLog(requestBody, 'Invalid request body.');
-        return {
+        callback(null, {
             statusCode: 400,
             body: JSON.stringify({status: 'fail', data: {errors: validationErrors}}),
-        }; // TODO : Consolidate.
+        }); // TODO : Consolidate.
     }
 
     let sourceIp;
@@ -154,17 +159,12 @@ exports.handler = async (event) => {
             email: requestBody.email,
             message: requestBody.message,
             ip_address: sourceIp
-        }, config);
-
-        return {
-            statusCode: 200,
-            body: JSON.stringify({status: 'success'}),
-        }; // TODO : Consolidate.
+        }, config, callback);
     } catch (e) {
         debugLog(e);
-        return {
+        callback(null, {
             statusCode: 500,
             body: JSON.stringify({status: 'error', message: 'Failed to send email.'}),
-        }; // TODO : Consolidate.
+        }); // TODO : Consolidate.
     }
 };
