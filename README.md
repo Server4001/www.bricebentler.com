@@ -1,6 +1,8 @@
 # bricebentler.com
 
-## My website.
+### NOTE: This is not actually used.
+
+Instead of using an EC2 instance provisioned by ansible, I opted to use a serverless version of my website using S3 and Lambda. See the master branch for this code.
 
 ### Setting up the bricebentler.loc local environment
 
