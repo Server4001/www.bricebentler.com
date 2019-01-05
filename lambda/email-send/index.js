@@ -5,6 +5,7 @@ const util = require('util');
 const path = require('path');
 const fs = require('fs');
 const mustache = require('mustache');
+const jsend = require('./lib/helpers/jsend');
 
 const emailSubject = 'Bricebentler.com Email Contact Form Entry';
 
@@ -31,7 +32,6 @@ const callSendgrid = (templateData, config, callback) => {
 
     const apiKey = config.sendgrid_api_key;
     const emailTemplate = fs.readFileSync(path.join(__dirname, '/views/email.html'), 'utf8');
-    // TODO : Confirm the templateData fields work.
     const emailHtml = mustache.render(emailTemplate, {
         email_address: templateData.email,
         name: templateData.name,
@@ -82,11 +82,7 @@ const callSendgrid = (templateData, config, callback) => {
     postReq.write(postData);
     postReq.end();
 
-    callback(null, {
-        statusCode: 200,
-        headers: { 'Access-Control-Allow-Origin': '*' },
-        body: JSON.stringify({status: 'success'}),
-    }); // TODO : Consolidate.
+    callback(null, jsend.generateResponse('success'));
 };
 
 // Handler function called by AWS Lambda.
@@ -98,11 +94,8 @@ exports.handler = async (event, context, callback) => {
         config = loadConfig();
     } catch (e) {
         debugLog(e);
-        callback(null, {
-            statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing/invalid config.'}),
-        }); // TODO : Consolidate.
+        callback(null, jsend.generateResponse('error', 'Unable to send email due to missing/invalid config.'));
+        return;
     }
 
     let configValidationErrors = [];
@@ -115,21 +108,15 @@ exports.handler = async (event, context, callback) => {
 
     if (configValidationErrors.length > 0) {
         debugLog(configValidationErrors, 'Missing the following config values:');
-        callback(null, {
-            statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({status: 'error', message: 'Unable to send email due to missing config values.'}),
-        }); // TODO : Consolidate.
+        callback(null, jsend.generateResponse('error', 'Unable to send email due to missing config values.'));
+        return;
     }
 
     // Validate event payload.
     if (event === undefined || event.body === undefined) {
         debugLog(event, 'Invalid event payload.');
-        callback(null, {
-            statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({status: 'error', message: 'Failed to send email due to invalid event object.'}),
-        }); // TODO : Consolidate.
+        callback(null, jsend.generateResponse('error', 'Failed to send email due to invalid event object.'));
+        return;
     }
 
     const requestBody = JSON.parse(event.body);
@@ -144,11 +131,8 @@ exports.handler = async (event, context, callback) => {
 
     if (validationErrors.length > 0) {
         debugLog(requestBody, 'Invalid request body.');
-        callback(null, {
-            statusCode: 400,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({status: 'fail', data: {errors: validationErrors}}),
-        }); // TODO : Consolidate.
+        callback(null, jsend.generateResponse('fail', {errors: validationErrors}));
+        return;
     }
 
     let sourceIp;
@@ -168,10 +152,6 @@ exports.handler = async (event, context, callback) => {
         }, config, callback);
     } catch (e) {
         debugLog(e);
-        callback(null, {
-            statusCode: 500,
-            headers: { 'Access-Control-Allow-Origin': '*' },
-            body: JSON.stringify({status: 'error', message: 'Failed to send email.'}),
-        }); // TODO : Consolidate.
+        callback(null, jsend.generateResponse('error', 'Failed to send email.'));
     }
 };
