@@ -42,5 +42,5 @@ This project contains 3 main directories:
 
 ### TODO
 
-* Document process for setting up S3, CloudFront, Lambda, IAM users, IAM roles.
+* Document process for setting up S3, CloudFront, Lambda, API Gateway, IAM users, IAM roles.
 * Move initial setup into infra as code (terraform/cloudformation or similar).
