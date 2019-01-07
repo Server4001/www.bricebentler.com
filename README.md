@@ -42,5 +42,10 @@ This project contains 3 main directories:
 
 ### TODO
 
-* Document process for setting up S3, CloudFront, Lambda, API Gateway, IAM users, IAM roles.
+* Document process for setting up S3, CloudFront, Lambda, API Gateway, Route53, IAM users, IAM roles.
 * Move initial setup into infra as code (terraform/cloudformation or similar).
+    * After initially pulling down the code from github:
+    * `cd terraform`
+    * `terraform init`
+    * `terraform plan`
+    * If there are changes ready to be made then run: `terraform apply`
