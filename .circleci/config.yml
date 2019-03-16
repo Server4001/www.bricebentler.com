@@ -1,0 +1,182 @@
+version: 2
+
+links:
+  - &root
+      ~/app
+
+  - &env
+    working_directory: *root
+    docker:
+      - image: circleci/node:10.12-browsers
+
+  - &cache_key_lambda_email_send_npm
+    lambda-email-send-npm-{{ checksum "~/app/lambda/email-send/package-lock.json" }}
+
+  - &cache_key_lambda_email_send_node_image
+    lambda-email-send-docker-node-{{ .Branch }}
+
+  - &save_cache_lambda_email_send_npm
+    save_cache:
+      key: *cache_key_lambda_email_send_npm
+      paths:
+        - ~/app/lambda/email-send/node_modules
+
+  - &save_cache_lambda_email_send_node_image
+    save_cache:
+      key: *cache_key_lambda_email_send_node_image
+      paths:
+        - /circle-docker-cache/node.tar
+
+  - &restore_cache_lambda_email_send_npm
+    restore_cache:
+      keys:
+        - *cache_key_lambda_email_send_npm
+
+  - &restore_cache_lambda_email_send_node_image
+    restore_cache:
+      keys:
+        - *cache_key_lambda_email_send_node_image
+
+  - &install_docker_deps
+    run:
+      name: Install Dependencies
+      command: |
+        apk add --no-cache py2-pip bash perl
+        pip install awscli --upgrade
+
+  - &master_branch_and_version_tags_only
+    filters:
+      branches:
+        only: master
+      tags:
+        only: /^v.*/
+
+  - &master_branch_only
+    filters:
+      branches:
+        only: master
+
+  - &version_tags_only
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v.*/
+
+
+jobs:
+  setup-lambda-email-send:
+    <<: *env
+    steps:
+      - checkout
+      - *restore_cache_lambda_email_send_npm
+      - run:
+          name: Install lambda deps
+          command: |
+            cd lambda/email-send
+            npm install --quiet
+      - *save_cache_lambda_email_send_npm
+      - persist_to_workspace:
+          root: *root
+          paths:
+            - .
+
+  test-lambda-email-send:
+    <<: *env
+    steps:
+      - attach_workspace:
+          at: *root
+      - *restore_cache_lambda_email_send_npm
+      - run:
+          name: Run spec
+          command: |
+            cd lambda/email-send
+            npm run test
+      - run:
+          name: Clear NPM dev dependencies
+          command: |
+            cd lambda/email-send
+            rm -rf node_modules/*
+            npm install --production --quiet
+      - persist_to_workspace:
+          root: *root
+          paths:
+            - .
+
+  build-lambda-email-send:
+    working_directory: *root
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: *root
+      - *install_docker_deps
+      - *restore_cache_lambda_email_send_node_image
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /circle-docker-cache/node.tar | true
+      - run:
+          shell: /bin/bash
+          name: Push Containers
+          command: |
+            echo "Pretend this is building the docker image..."
+            docker pull node:10.15.3-alpine
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /circle-docker-cache
+            docker save -o /circle-docker-cache/node.tar node
+      - *save_cache_lambda_email_send_node_image
+      - persist_to_workspace:
+          root: *root
+          paths:
+            - .
+
+  deploy-lambda-email-send-stage:
+    working_directory: *root
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - checkout
+      - *install_docker_deps
+      - run:
+          shell: /bin/bash
+          name: Deploy cloud infra via terraform
+          command: ./deploy.sh stage $CIRCLE_SHA1
+
+  deploy-lambda-email-send-prod:
+    working_directory: *root
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - checkout
+      - *install_docker_deps
+      - run:
+          shell: /bin/bash
+          name: Deploy cloud infra via terraform
+          command: ./deploy.sh prod $CIRCLE_SHA1
+
+
+workflows:
+  version: 2
+  deploy-lambda-email-send:
+    jobs:
+      - setup-lambda-email-send
+      - test-lambda-email-send:
+          requires:
+            - setup-lambda-email-send
+      - build-lambda-email-send:
+          <<: *master_branch_and_version_tags_only
+          requires:
+            - test-lambda-email-send
+      - deploy-lambda-email-send-stage:
+          <<: *master_branch_only
+          requires:
+            - build-lambda-email-send
+      - deploy-lambda-email-send-prod:
+          <<: *version_tags_only
+          requires:
+            - build-lambda-email-send
