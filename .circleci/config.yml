@@ -16,3 +16,5 @@ jobs:
           ls -lah
           pwd
           ls -lah app
+          echo ${S3_BUCKET}
+          echo $S3_BUCKET
