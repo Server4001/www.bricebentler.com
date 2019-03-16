@@ -9,20 +9,33 @@ links:
     docker:
       - image: circleci/node:10.12-browsers
 
-  - &cache_key
-      lambda-email-send-npm--{{ checksum "~/app/lambda/email-send/package-lock.json" }}
+  - &cache_key_lambda_email_send_npm
+    lambda-email-send-npm-{{ checksum "~/app/lambda/email-send/package-lock.json" }}
 
-  - &save_cache
+  - &cache_key_lambda_email_send_node_image
+    lambda-email-send-docker-node-{{ .Branch }}
+
+  - &save_cache_lambda_email_send_npm
     save_cache:
-      key: *cache_key
+      key: *cache_key_lambda_email_send_npm
       paths:
         - ~/app/lambda/email-send/node_modules
 
-  - &restore_cache
+  - &save_cache_lambda_email_send_node_image
+    save_cache:
+      key: *cache_key_lambda_email_send_node_image
+      paths:
+        - /circle-docker-cache/node.tar
+
+  - &restore_cache_lambda_email_send_npm
     restore_cache:
       keys:
-        - *cache_key
+        - *cache_key_lambda_email_send_npm
 
+  - &restore_cache_lambda_email_send_node_image
+    restore_cache:
+      keys:
+        - *cache_key_lambda_email_send_node_image
 
 jobs:
 
@@ -30,13 +43,13 @@ jobs:
     <<: *env
     steps:
       - checkout
-      - *restore_cache
+      - *restore_cache_lambda_email_send_npm
       - run:
           name: Install lambda deps
           command: |
             cd lambda/email-send
             npm install --quiet
-      - *save_cache
+      - *save_cache_lambda_email_send_npm
       - persist_to_workspace:
           root: *root
           paths:
@@ -47,7 +60,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *root
-      - *restore_cache
+      - *restore_cache_lambda_email_send_npm
       - run:
           name: Run spec
           command: |
@@ -77,6 +90,28 @@ jobs:
           command: |
             apk add --no-cache py2-pip bash perl
             pip install awscli --upgrade
+      - *restore_cache_lambda_email_send_node_image
+      - run:
+          name: Load Docker image layer cache
+          command: |
+            set +o pipefail
+            docker load -i /circle-docker-cache/node.tar | true
+      - run:
+          shell: /bin/bash
+          name: Push Containers
+          command: |
+            echo "Pretend this is building the docker image..."
+            docker pull node:10.15.3-alpine
+      - run:
+          name: Save Docker image layer cache
+          command: |
+            mkdir -p /circle-docker-cache
+            docker save -o /circle-docker-cache/node.tar node
+      - *save_cache_lambda_email_send_node_image
+      - persist_to_workspace:
+          root: *root
+          paths:
+            - .
 
 workflows:
   version: 2
@@ -86,3 +121,6 @@ workflows:
       - test-lambda-email-send:
           requires:
             - setup-lambda-email-send
+      - build-lambda-email-send:
+          requires:
+            - test-lambda-email-send
