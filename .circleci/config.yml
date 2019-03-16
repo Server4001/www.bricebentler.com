@@ -15,3 +15,4 @@ jobs:
           cd ~
           ls -lah
           pwd
+          ls -lah app
