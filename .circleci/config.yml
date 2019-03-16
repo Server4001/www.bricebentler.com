@@ -1,6 +1,12 @@
 version: 2
+
+defaults: &defaults
+  working_directory: ~/app
+
 jobs:
+
   build:
+    <<: *defaults
     docker:
       - image: circleci/ruby:2.4.1
     steps:
