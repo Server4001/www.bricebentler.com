@@ -6,6 +6,6 @@ jobs:
     steps:
       - checkout
       - run: |
-          pwd
+          cd ~
           ls -lah
-          whoami
+          pwd
