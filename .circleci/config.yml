@@ -16,10 +16,10 @@ jobs:
     <<: *env
     steps:
       - checkout
-      - run: |
-          cd ~
-          ls -lah
-          pwd
-          ls -lah app
-          echo ${S3_BUCKET}
-          echo $S3_BUCKET
+      - run:
+          name: Install lambda deps
+          command: |
+            cd lambda/email-send
+            npm install
+            ls -lah
+
