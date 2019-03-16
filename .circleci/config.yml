@@ -12,14 +12,70 @@ links:
 
 jobs:
 
-  build:
+  setup-lambda-email-send:
     <<: *env
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - lambda-email-send-npm-{{ .Branch }}
       - run:
           name: Install lambda deps
           command: |
             cd lambda/email-send
-            npm install
-            ls -lah
+            npm install --quiet
+      - save_cache:
+          key: lambda-email-send-npm-{{ .Branch }}
+          paths:
+            - ~/app/lambda/email-send/node_modules
+      - persist_to_workspace:
+          root: *root
+          paths:
+            - .
 
+  test-lambda-email-send:
+    <<: *env
+    steps:
+      - attach_workspace:
+          at: *root
+      - restore_cache:
+          keys:
+            - lambda-email-send-npm-{{ .Branch }}
+      - run:
+          name: Run spec
+          command: |
+            cd lambda/email-send
+            npm run test
+      - run:
+          name: Clear NPM dev dependencies
+          command: |
+            cd lambda/email-send
+            rm -rf node_modules/*
+            npm install --production --quiet
+      - persist_to_workspace:
+          root: *root
+          paths:
+            - .
+
+  build-lambda-email-send:
+    working_directory: *root
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - setup_remote_docker
+      - attach_workspace:
+          at: ~/app
+      - run:
+          name: Install Dependencies
+          command: |
+            apk add --no-cache py2-pip bash perl
+            pip install awscli --upgrade
+
+workflows:
+  version: 2
+  deploy:
+    jobs:
+      - setup-lambda-email-send
+      - test-lambda-email-send:
+          requires:
+            - setup-lambda-email-send
