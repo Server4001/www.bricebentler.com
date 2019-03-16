@@ -1,14 +1,19 @@
 version: 2
 
-defaults: &defaults
-  working_directory: ~/app
+links:
+  - &root
+      ~/app
+
+  - &env
+    working_directory: *root
+    docker:
+      - image: circleci/node:10.12-browsers
+
 
 jobs:
 
   build:
-    <<: *defaults
-    docker:
-      - image: circleci/ruby:2.4.1
+    <<: *env
     steps:
       - checkout
       - run: |
