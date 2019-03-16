@@ -73,7 +73,7 @@ jobs:
 
 workflows:
   version: 2
-  deploy:
+  deploy-lambda-email-send:
     jobs:
       - setup-lambda-email-send
       - test-lambda-email-send:
