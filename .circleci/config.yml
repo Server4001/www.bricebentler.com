@@ -37,12 +37,32 @@ links:
       keys:
         - *cache_key_lambda_email_send_node_image
 
-  - &master_branch_only
+  - &install_docker_deps
+    run:
+      name: Install Dependencies
+      command: |
+        apk add --no-cache py2-pip bash perl
+        pip install awscli --upgrade
+
+  - &master_branch_and_version_tags_only
     filters:
       branches:
         only: master
       tags:
         only: /^v.*/
+
+  - &master_branch_only
+    filters:
+      branches:
+        only: master
+
+  - &version_tags_only
+    filters:
+      branches:
+        ignore: /.*/
+      tags:
+        only: /^v.*/
+
 
 jobs:
   setup-lambda-email-send:
@@ -91,11 +111,7 @@ jobs:
       - setup_remote_docker
       - attach_workspace:
           at: *root
-      - run:
-          name: Install Dependencies
-          command: |
-            apk add --no-cache py2-pip bash perl
-            pip install awscli --upgrade
+      - *install_docker_deps
       - *restore_cache_lambda_email_send_node_image
       - run:
           name: Load Docker image layer cache
@@ -119,6 +135,31 @@ jobs:
           paths:
             - .
 
+  deploy-lambda-email-send-stage:
+    working_directory: *root
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - checkout
+      - *install_docker_deps
+      - run:
+          shell: /bin/bash
+          name: Deploy cloud infra via terraform
+          command: ./deploy.sh stage $CIRCLE_SHA1
+
+  deploy-lambda-email-send-prod:
+    working_directory: *root
+    docker:
+      - image: docker:18.06.1-ce-git
+    steps:
+      - checkout
+      - *install_docker_deps
+      - run:
+          shell: /bin/bash
+          name: Deploy cloud infra via terraform
+          command: ./deploy.sh prod $CIRCLE_SHA1
+
+
 workflows:
   version: 2
   deploy-lambda-email-send:
@@ -128,6 +169,14 @@ workflows:
           requires:
             - setup-lambda-email-send
       - build-lambda-email-send:
-          <<: *master_branch_only
+          <<: *master_branch_and_version_tags_only
           requires:
             - test-lambda-email-send
+      - deploy-lambda-email-send-stage:
+          <<: *master_branch_only
+          requires:
+            - build-lambda-email-send
+      - deploy-lambda-email-send-prod:
+          <<: *version_tags_only
+          requires:
+            - build-lambda-email-send
