@@ -10,7 +10,7 @@ links:
       - image: circleci/node:10.12-browsers
 
   - &cache_key
-      lambda-email-send-npm--{{ checksum "package-lock.json" }}
+      lambda-email-send-npm--{{ checksum "~/app/lambda/email-send/package-lock.json" }}
 
   - &save_cache
     save_cache:
