@@ -9,6 +9,20 @@ links:
     docker:
       - image: circleci/node:10.12-browsers
 
+  - &cache_key
+      lambda-email-send-npm--{{ checksum "package-lock.json" }}
+
+  - &save_cache
+    save_cache:
+      key: *cache_key
+      paths:
+        - ~/app/lambda/email-send/node_modules
+
+  - &restore_cache
+    restore_cache:
+      keys:
+        - *cache_key
+
 
 jobs:
 
@@ -16,18 +30,13 @@ jobs:
     <<: *env
     steps:
       - checkout
-      - restore_cache:
-          keys:
-            - lambda-email-send-npm-{{ .Branch }}
+      - *restore_cache
       - run:
           name: Install lambda deps
           command: |
             cd lambda/email-send
             npm install --quiet
-      - save_cache:
-          key: lambda-email-send-npm-{{ .Branch }}
-          paths:
-            - ~/app/lambda/email-send/node_modules
+      - *save_cache
       - persist_to_workspace:
           root: *root
           paths:
@@ -38,9 +47,7 @@ jobs:
     steps:
       - attach_workspace:
           at: *root
-      - restore_cache:
-          keys:
-            - lambda-email-send-npm-{{ .Branch }}
+      - *restore_cache
       - run:
           name: Run spec
           command: |
