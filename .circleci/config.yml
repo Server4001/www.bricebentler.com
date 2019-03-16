@@ -37,8 +37,14 @@ links:
       keys:
         - *cache_key_lambda_email_send_node_image
 
-jobs:
+  - &master_branch_only
+    filters:
+      branches:
+        only: master
+      tags:
+        only: /^v.*/
 
+jobs:
   setup-lambda-email-send:
     <<: *env
     steps:
@@ -122,5 +128,6 @@ workflows:
           requires:
             - setup-lambda-email-send
       - build-lambda-email-send:
+          <<: *master_branch_only
           requires:
             - test-lambda-email-send
