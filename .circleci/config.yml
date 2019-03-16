@@ -145,7 +145,7 @@ jobs:
       - run:
           shell: /bin/bash
           name: Deploy cloud infra via terraform
-          command: ./deploy.sh stage $CIRCLE_SHA1
+          command: ./deploy stage $CIRCLE_SHA1
 
   deploy-lambda-email-send-prod:
     working_directory: *root
@@ -157,7 +157,7 @@ jobs:
       - run:
           shell: /bin/bash
           name: Deploy cloud infra via terraform
-          command: ./deploy.sh prod $CIRCLE_SHA1
+          command: ./deploy prod $CIRCLE_SHA1
 
 
 workflows:
