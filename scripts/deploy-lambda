@@ -77,6 +77,7 @@ echo "DEPLOYING ARTIFACT TO LAMBDA..."
 lambda_response=$(aws lambda update-function-code \
   --function-name "${LAMBDA_FUNC_NAME}" \
   --zip-file "fileb://${artifact_file_path}" \
+  --profile "${LAMBDA_PROFILE}" \
   --region "${REGION}" \
   ${FLAGS})
 
