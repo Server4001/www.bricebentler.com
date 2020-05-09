@@ -7,7 +7,7 @@
     "test": "mocha tests/**/*.js",
     "test:coverage": "istanbul cover _mocha -- -R tap \"./tests/**/*.js\" > ./test.tap && istanbul report clover",
     "test:lambda": "./tests/bin/lambda-local",
-    "build": "artifact=email-send-$(date +%s).zip && mkdir -p build && rm -rf node_modules && npm install --production && zip -q -r ./build/${artifact} . -x \"*config.json.local*\" -x \"*build*\" -x \"*tests*\" && npm install && echo ${artifact}"
+    "build": "artifact=email-send-$(date +%s).zip && mkdir -p build && rm -rf node_modules && npm install --production && zip -q -r ./build/${artifact} . -x \"*config.json.local*\" -x \"*build*\" -x \"*tests*\" -x \"*coverage*\" -x \"test.tap\" && npm install && echo ${artifact}"
   },
   "engines": {
     "node": ">=12.0 <13.0"
