@@ -9,6 +9,9 @@
     "test:lambda": "./tests/bin/lambda-local",
     "build": "artifact=email-send-$(date +%s).zip && mkdir -p build && rm -rf node_modules && npm install --production && zip -q -r ./build/${artifact} . -x \"*config.json.local*\" -x \"*build*\" -x \"*tests*\" && npm install && echo ${artifact}"
   },
+  "engines": {
+    "node": ">=12.0 <13.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+ssh://git@bitbucket.org/server4001/bricebentler.com-v3.git"

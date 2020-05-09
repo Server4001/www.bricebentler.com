@@ -1,6 +1,17 @@
+# IDEs
 /.idea
+
+# Vagrant
 /.vagrant
+
+# Secrets
 /scripts/config/secrets.sh
 /lambda/*/etc/config.json
+
+# Builds
 /lambda/*/node_modules
 /lambda/*/build
+
+# Tests
+lambda/email-send/coverage
+lambda/email-send/test.tap

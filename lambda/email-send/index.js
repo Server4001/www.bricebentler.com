@@ -19,6 +19,7 @@ const debugLog = (logVariable, logMessage = null) => {
 };
 
 const loadConfig = () => {
+    // TODO : Use env vars.
     const configFile = path.join(__dirname, '/etc/config.json');
 
     if (!fs.existsSync(configFile)) {
