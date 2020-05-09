@@ -14,11 +14,11 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/server4001/bricebentler.com-v3.git"
+    "url": "git@github.com:Server4001/www.bricebentler.com.git"
   },
   "author": "Brice Bentler <me@bricebentler.com>",
   "license": "MIT",
-  "homepage": "https://bitbucket.org/server4001/bricebentler.com-v3#readme",
+  "homepage": "https://www.bricebentler.com",
   "devDependencies": {
     "chai": "^4.2.0",
     "istanbul": "^0.4.5",
