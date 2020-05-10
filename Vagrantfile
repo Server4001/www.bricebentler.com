@@ -4,8 +4,7 @@
 VAGRANTFILE_API_VERSION = "2"
 
 $bricebentler_com_script = <<SCRIPT
-rpm -Uvh https://rpm.nodesource.com/pub_12.x/el/7/x86_64/nodesource-release-el7-1.noarch.rpm
-yum install -y nodejs-12.16.3 epel-release
+yum install -y epel-release
 yum install -y nginx
 systemctl start nginx
 systemctl enable nginx
